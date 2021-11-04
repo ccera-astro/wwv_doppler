@@ -35,25 +35,25 @@ blocks:
 - name: det_srate
   id: variable
   parameters:
-    comment: Final detector sample rate
+    comment: 2nd stage decimator output rate
     value: '500'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [376, 964.0]
+    coordinate: [1296, 228.0]
     rotation: 0
     state: true
-- name: deviation
+- name: fftsize
   id: variable
   parameters:
-    comment: Max expected carrier deviation
-    value: '10'
+    comment: ''
+    value: '2048'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [528, 964.0]
+    coordinate: [480, 964.0]
     rotation: 0
     state: true
 - name: first_len
@@ -94,7 +94,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1392, 308.0]
+    coordinate: [1296, 20.0]
     rotation: 0
     state: true
 - name: mid_rate
@@ -106,7 +106,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1392, 404.0]
+    coordinate: [1296, 116.0]
     rotation: 0
     state: true
 - name: samp_rate
@@ -139,7 +139,7 @@ blocks:
     beta: '6.76'
     comment: The taps for the filter above
     cutoff_freq: '2000'
-    gain: '5.0'
+    gain: '1.0'
     samp_rate: high_rate
     width: '1200'
     win: firdes.WIN_HAMMING
@@ -168,7 +168,7 @@ blocks:
     beta: '6.76'
     comment: The taps for the filter above
     cutoff_freq: '200'
-    gain: '5.0'
+    gain: '1.0'
     samp_rate: mid_rate
     width: '20'
     win: firdes.WIN_HAMMING
@@ -179,58 +179,56 @@ blocks:
     coordinate: [1088, 356.0]
     rotation: 0
     state: true
-- name: analog_pll_freqdet_cf_0
-  id: analog_pll_freqdet_cf
+- name: blocks_complex_to_mag_squared_0
+  id: blocks_complex_to_mag_squared
   parameters:
     affinity: ''
     alias: ''
     comment: ''
-    max_freq: deviation/(det_srate/2.0)*3.14159
     maxoutbuf: '0'
-    min_freq: deviation/(det_srate/2.0)*3.14159
     minoutbuf: '0'
-    w: 3.14159/100
+    vlen: fftsize
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [304, 852.0]
+    coordinate: [720, 780.0]
     rotation: 0
     state: true
-- name: blocks_multiply_const_vxx_0
-  id: blocks_multiply_const_vxx
+- name: blocks_multiply_const_xx_0
+  id: blocks_multiply_const_xx
   parameters:
     affinity: ''
     alias: ''
     comment: ''
-    const: 1.0/(2*3.14159)
+    const: '1000.0'
     maxoutbuf: '0'
     minoutbuf: '0'
     type: float
+    vlen: fftsize
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [944, 876.0]
+    rotation: 0
+    state: true
+- name: blocks_stream_to_vector_0
+  id: blocks_stream_to_vector
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_items: fftsize
+    type: complex
     vlen: '1'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [576, 876.0]
-    rotation: 0
-    state: true
-- name: blocks_multiply_const_vxx_1
-  id: blocks_multiply_const_vxx
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    const: det_srate
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    type: float
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [832, 876.0]
+    coordinate: [248, 844.0]
     rotation: 0
     state: true
 - name: device
@@ -247,7 +245,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [800, 700.0]
+    coordinate: [752, 612.0]
     rotation: 0
     state: true
 - name: fft_filter_xxx_0
@@ -290,6 +288,27 @@ blocks:
     coordinate: [920, 180.0]
     rotation: 0
     state: true
+- name: fft_vxx_0
+  id: fft_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    fft_size: fftsize
+    forward: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    nthreads: '1'
+    shift: 'True'
+    type: complex
+    window: window.blackmanharris(fftsize)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [480, 820.0]
+    rotation: 0
+    state: true
 - name: freq
   id: parameter
   parameters:
@@ -299,12 +318,12 @@ blocks:
     label: Frequency
     short_id: ''
     type: eng_float
-    value: 920e6
+    value: 400.0e6
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [96, 700.0]
+    coordinate: [48, 612.0]
     rotation: 0
     state: true
 - name: freq_xlating_fft_filter_ccc_0
@@ -356,12 +375,12 @@ blocks:
     label: Logging interval
     short_id: ''
     type: intx
-    value: '5'
+    value: '10'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [640, 700.0]
+    coordinate: [592, 612.0]
     rotation: 0
     state: true
 - name: note_0
@@ -381,27 +400,6 @@ blocks:
     coordinate: [920, 36.0]
     rotation: 0
     state: true
-- name: note_1
-  id: note
-  parameters:
-    alias: ''
-    comment: '**** NB *******************************
-
-      These parameters are just best guesses
-
-      as to what might work
-
-      experimentation IS A MUST!!
-
-      ***************************************'
-    note: ''
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [752, 980.0]
-    rotation: 0
-    state: true
 - name: offset
   id: parameter
   parameters:
@@ -416,7 +414,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [304, 700.0]
+    coordinate: [256, 612.0]
     rotation: 0
     state: true
 - name: osmosdr_source_0
@@ -790,7 +788,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [464, 700.0]
+    coordinate: [416, 612.0]
     rotation: 0
     state: true
 - name: rfgain
@@ -807,7 +805,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [208, 700.0]
+    coordinate: [160, 612.0]
     rotation: 0
     state: true
 - name: single_pole_iir_filter_xx_0
@@ -815,17 +813,17 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    alpha: 1.0/(det_srate*2.0)
+    alpha: '0.1'
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
     type: float
-    vlen: '1'
+    vlen: fftsize
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1096, 884.0]
+    coordinate: [1128, 724.0]
     rotation: 0
     state: true
 - name: virtual_sink_0
@@ -841,6 +839,19 @@ blocks:
     coordinate: [1120, 196.0]
     rotation: 0
     state: true
+- name: virtual_sink_1
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: fast_rf_1
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [664, 52.0]
+    rotation: 0
+    state: true
 - name: virtual_source_0
   id: virtual_source
   parameters:
@@ -851,7 +862,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [48, 868.0]
+    coordinate: [24, 828.0]
     rotation: 0
     state: true
 - name: wwv_logger
@@ -864,26 +875,30 @@ blocks:
       from gnuradio import gr\nimport time\n\n\n\nclass blk(gr.sync_block):  # other\
       \ base classes are basic_block, decim_block, interp_block\n    \"\"\"Log WWV\
       \ doppler data\"\"\"\n\n    def __init__(self, log_rate=1.0, prefix=\"./\",\
-      \ samp_rate=1e3):  # only default arguments here\n        \"\"\"arguments to\
-      \ this function show up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n\
+      \ samp_rate=1e3, fftsize=2048):  # only default arguments here\n        \"\"\
+      \"arguments to this function show up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n\
       \            self,\n            name='WWV data Logger',   # will show up in\
-      \ GRC\n            in_sig=[np.float32],\n            out_sig=None\n        )\n\
-      \        # if an attribute with the same name as a parameter is found,\n   \
-      \     # a callback is registered (properties work, too).\n        self.log_rate\
+      \ GRC\n            in_sig=[(np.float32,fftsize)],\n            out_sig=None\n\
+      \        )\n        # if an attribute with the same name as a parameter is found,\n\
+      \        # a callback is registered (properties work, too).\n        self.log_rate\
       \ = log_rate\n        self.prefix = prefix\n        self.avg = 0.0\n       \
       \ self.now = time.time()\n        self.count = 0\n        self.samp_rate = samp_rate\n\
-      \n    def work(self, input_items, output_items):\n        \"\"\"Log at defined\
-      \ rate\"\"\"\n        \n        for v in input_items[0]:\n            self.avg\
-      \ += v\n            self.count += 1\n            if (self.count >= (self.log_rate\
-      \ * self.samp_rate)):\n                self.avg /= self.count\n            \
-      \    self.count = 0\n                ltp = time.gmtime()\n                d\
-      \ = \"%04d%02d%02d\" % (ltp.tm_year, ltp.tm_mon, ltp.tm_mday)\n            \
-      \    fn = self.prefix + d + \".csv\"\n                fp = open(fn, \"a\")\n\
-      \                fp.write(\"%02d,%02d,%02d,%f\\n\" % (ltp.tm_hour, ltp.tm_min,\
-      \ ltp.tm_sec, self.avg))\n            \n  \n        return len(input_items[0])\n"
+      \        self.fftsize = fftsize\n\n    def work(self, input_items, output_items):\n\
+      \        \"\"\"Log at defined rate\"\"\"\n        \n        for v in input_items[0]:\n\
+      \            mx = np.argmax(v)\n            mxf = mx - self.fftsize/2\n    \
+      \        mxf *= (self.samp_rate/self.fftsize)\n            self.avg += mxf\n\
+      \            self.count += 1\n            if ((time.time()) - self.now >= self.log_rate):\n\
+      \                ltp = time.gmtime()\n                d = \"%04d%02d%02d\" %\
+      \ (ltp.tm_year, ltp.tm_mon, ltp.tm_mday)\n                self.avg /= self.count\n\
+      \                fn = self.prefix + d + \".csv\"\n                fp = open(fn,\
+      \ \"a\")\n                fp.write (\"%02d,%02d,%0d,%f\\n\" % (ltp.tm_hour,\
+      \ ltp.tm_min, ltp.tm_sec, self.avg))\n                self.avg = 0\n       \
+      \         self.count = 0\n                self.now = time.time()\n         \
+      \   \n  \n        return len(input_items[0])\n"
     affinity: ''
     alias: ''
     comment: ''
+    fftsize: fftsize
     log_rate: logtime
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -891,25 +906,27 @@ blocks:
     samp_rate: det_srate
   states:
     _io_cache: ('WWV data Logger', 'blk', [('log_rate', '1.0'), ('prefix', "'./'"),
-      ('samp_rate', '1000.0')], [('0', 'float', 1)], [], 'Log WWV doppler data', ['log_rate',
-      'prefix', 'samp_rate'])
+      ('samp_rate', '1000.0'), ('fftsize', '2048')], [('0', 'float', 2048)], [], 'Log
+      WWV doppler data', ['fftsize', 'log_rate', 'prefix', 'samp_rate'])
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1344, 868.0]
+    coordinate: [1344, 708.0]
     rotation: 0
-    state: true
+    state: enabled
 
 connections:
-- [analog_pll_freqdet_cf_0, '0', blocks_multiply_const_vxx_0, '0']
-- [blocks_multiply_const_vxx_0, '0', blocks_multiply_const_vxx_1, '0']
-- [blocks_multiply_const_vxx_1, '0', single_pole_iir_filter_xx_0, '0']
+- [blocks_complex_to_mag_squared_0, '0', blocks_multiply_const_xx_0, '0']
+- [blocks_multiply_const_xx_0, '0', single_pole_iir_filter_xx_0, '0']
+- [blocks_stream_to_vector_0, '0', fft_vxx_0, '0']
 - [fft_filter_xxx_0, '0', fft_filter_xxx_0_0, '0']
 - [fft_filter_xxx_0_0, '0', virtual_sink_0, '0']
+- [fft_vxx_0, '0', blocks_complex_to_mag_squared_0, '0']
 - [freq_xlating_fft_filter_ccc_0, '0', fft_filter_xxx_0, '0']
+- [freq_xlating_fft_filter_ccc_0, '0', virtual_sink_1, '0']
 - [osmosdr_source_0, '0', freq_xlating_fft_filter_ccc_0, '0']
 - [single_pole_iir_filter_xx_0, '0', wwv_logger, '0']
-- [virtual_source_0, '0', analog_pll_freqdet_cf_0, '0']
+- [virtual_source_0, '0', blocks_stream_to_vector_0, '0']
 
 metadata:
   file_format: 1
