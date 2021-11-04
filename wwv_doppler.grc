@@ -233,6 +233,23 @@ blocks:
     coordinate: [832, 876.0]
     rotation: 0
     state: true
+- name: device
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Device string
+    short_id: ''
+    type: str
+    value: '"airspy=0"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [800, 700.0]
+    rotation: 0
+    state: true
 - name: fft_filter_xxx_0
   id: fft_filter_xxx
   parameters:
@@ -282,7 +299,7 @@ blocks:
     label: Frequency
     short_id: ''
     type: eng_float
-    value: 101.1e6
+    value: 920e6
   states:
     bus_sink: false
     bus_source: false
@@ -295,10 +312,10 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    center_freq: -offset
+    center_freq: offset
     comment: 'Rotate down to baseband--the hardware is
 
-      tuned 10kHz low, to avoid any DC offset
+      tuned ''offset'' low, to avoid any DC offset
 
       Then this rotates and filters so that
 
@@ -314,7 +331,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [464, 132.0]
+    coordinate: [440, 156.0]
     rotation: 0
     state: true
 - name: import_0
@@ -328,6 +345,23 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [320, 20.0]
+    rotation: 0
+    state: true
+- name: logtime
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Logging interval
+    short_id: ''
+    type: intx
+    value: '5'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [640, 700.0]
     rotation: 0
     state: true
 - name: note_0
@@ -344,26 +378,28 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [736, 36.0]
+    coordinate: [920, 36.0]
     rotation: 0
     state: true
 - name: note_1
   id: note
   parameters:
     alias: ''
-    comment: '**** NB ****
+    comment: '**** NB *******************************
 
       These parameters are just best guesses
 
       as to what might work
 
-      experimentation IS A MUST!!'
+      experimentation IS A MUST!!
+
+      ***************************************'
     note: ''
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [256, 996.0]
+    coordinate: [752, 980.0]
     rotation: 0
     state: true
 - name: offset
@@ -420,7 +456,7 @@ blocks:
     ant7: ''
     ant8: ''
     ant9: ''
-    args: airspy
+    args: device
     bb_gain0: '20'
     bb_gain1: '20'
     bb_gain10: '20'
@@ -737,7 +773,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [160, 124.0]
+    coordinate: [40, 172.0]
     rotation: 0
     state: enabled
 - name: prefix
@@ -766,7 +802,7 @@ blocks:
     label: RF Gain
     short_id: ''
     type: eng_float
-    value: '30'
+    value: '40'
   states:
     bus_sink: false
     bus_source: false
@@ -779,7 +815,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    alpha: 1.0/(det_srate)
+    alpha: 1.0/(det_srate*2.0)
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -848,7 +884,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    log_rate: '5.0'
+    log_rate: logtime
     maxoutbuf: '0'
     minoutbuf: '0'
     prefix: prefix
