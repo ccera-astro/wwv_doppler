@@ -73,18 +73,6 @@ blocks:
     coordinate: [1640, 364.0]
     rotation: 0
     state: true
-- name: fsk_deviation_hz
-  id: variable
-  parameters:
-    comment: ''
-    value: '75'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [312, 900.0]
-    rotation: 0
-    state: true
 - name: high_rate
   id: variable
   parameters:
@@ -141,7 +129,7 @@ blocks:
     cutoff_freq: mid_rate/2.5
     gain: '1.0'
     samp_rate: high_rate
-    width: '1200'
+    width: '1100'
     win: firdes.WIN_HAMMING
   states:
     bus_sink: false
@@ -167,10 +155,10 @@ blocks:
   parameters:
     beta: '6.76'
     comment: The taps for the filter above
-    cutoff_freq: '150'
+    cutoff_freq: '250'
     gain: '1.0'
     samp_rate: mid_rate
-    width: '30'
+    width: '40'
     win: firdes.WIN_HAMMING
   states:
     bus_sink: false
@@ -185,7 +173,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    gain: mid_rate/(2*math.pi*fsk_deviation_hz/8.0)
+    gain: '1.0'
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
@@ -201,7 +189,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    gain: mid_rate/(2*math.pi*fsk_deviation_hz/8.0)
+    gain: '1.0'
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
@@ -209,6 +197,42 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [288, 972.0]
+    rotation: 0
+    state: true
+- name: blocks_multiply_const_vxx_0
+  id: blocks_multiply_const_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    const: (1.0/(math.pi*2.0))*mid_rate
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [648, 828.0]
+    rotation: 0
+    state: true
+- name: blocks_multiply_const_vxx_0_0
+  id: blocks_multiply_const_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    const: (1.0/(math.pi*2.0))*mid_rate
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [648, 972.0]
     rotation: 0
     state: true
 - name: device
@@ -454,6 +478,36 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [1064, 28.0]
+    rotation: 0
+    state: true
+- name: note_1
+  id: note
+  parameters:
+    alias: ''
+    comment: Scale into frequency offset
+    note: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [688, 740.0]
+    rotation: 0
+    state: true
+- name: note_2
+  id: note
+  parameters:
+    alias: ''
+    comment: 'A low pass filter
+
+      gives an estimate of the
+
+      frequency offset'
+    note: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1032, 716.0]
     rotation: 0
     state: true
 - name: osmosdr_source_0
@@ -862,7 +916,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [544, 828.0]
+    coordinate: [944, 828.0]
     rotation: 0
     state: true
 - name: single_pole_iir_filter_xx_0_0
@@ -880,7 +934,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [544, 972.0]
+    coordinate: [944, 972.0]
     rotation: 0
     state: true
 - name: virtual_sink_0
@@ -932,7 +986,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [32, 964.0]
+    coordinate: [24, 972.0]
     rotation: 0
     state: true
 - name: wwv_doplog
@@ -977,7 +1031,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [968, 812.0]
+    coordinate: [1192, 812.0]
     rotation: 0
     state: true
 - name: wwv_doplog_0
@@ -1022,13 +1076,15 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [968, 956.0]
+    coordinate: [1192, 956.0]
     rotation: 0
     state: true
 
 connections:
-- [analog_quadrature_demod_cf_0, '0', single_pole_iir_filter_xx_0, '0']
-- [analog_quadrature_demod_cf_0_0, '0', single_pole_iir_filter_xx_0_0, '0']
+- [analog_quadrature_demod_cf_0, '0', blocks_multiply_const_vxx_0, '0']
+- [analog_quadrature_demod_cf_0_0, '0', blocks_multiply_const_vxx_0_0, '0']
+- [blocks_multiply_const_vxx_0, '0', single_pole_iir_filter_xx_0, '0']
+- [blocks_multiply_const_vxx_0_0, '0', single_pole_iir_filter_xx_0_0, '0']
 - [fft_filter_xxx_0, '0', fft_filter_xxx_0_0, '0']
 - [fft_filter_xxx_0_0, '0', virtual_sink_0, '0']
 - [fft_filter_xxx_0_0_0, '0', virtual_sink_0_0, '0']
