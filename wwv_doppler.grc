@@ -97,6 +97,18 @@ blocks:
     coordinate: [856, 36.0]
     rotation: 0
     state: true
+- name: pll_limit
+  id: variable
+  parameters:
+    comment: ''
+    value: (50.0/(mid_rate/2.0))*math.pi
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [672, 740.0]
+    rotation: 0
+    state: true
 - name: samp_rate
   id: variable
   parameters:
@@ -167,6 +179,82 @@ blocks:
     coordinate: [2056, 364.0]
     rotation: 0
     state: true
+- name: analog_agc_xx_0
+  id: analog_agc_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    gain: '1.0'
+    max_gain: '65536'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    rate: 1e-4
+    reference: '1.0'
+    type: complex
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [256, 732.0]
+    rotation: 0
+    state: true
+- name: analog_agc_xx_0_0
+  id: analog_agc_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    gain: '1.0'
+    max_gain: '65536'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    rate: 1e-4
+    reference: '1.0'
+    type: complex
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [256, 972.0]
+    rotation: 0
+    state: true
+- name: analog_pll_refout_cc_0
+  id: analog_pll_refout_cc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    max_freq: pll_limit
+    maxoutbuf: '0'
+    min_freq: -pll_limit
+    minoutbuf: '0'
+    w: 3.14159/20
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [448, 740.0]
+    rotation: 0
+    state: true
+- name: analog_pll_refout_cc_0_0
+  id: analog_pll_refout_cc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    max_freq: pll_limit
+    maxoutbuf: '0'
+    min_freq: -pll_limit
+    minoutbuf: '0'
+    w: 3.14159/20
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [456, 972.0]
+    rotation: 0
+    state: true
 - name: analog_quadrature_demod_cf_0
   id: analog_quadrature_demod_cf
   parameters:
@@ -180,7 +268,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [520, 820.0]
+    coordinate: [656, 820.0]
     rotation: 0
     state: true
 - name: analog_quadrature_demod_cf_0_0
@@ -196,7 +284,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [520, 972.0]
+    coordinate: [680, 988.0]
     rotation: 0
     state: true
 - name: blocks_complex_to_mag_squared_0
@@ -228,7 +316,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [520, 1052.0]
+    coordinate: [528, 1148.0]
     rotation: 0
     state: true
 - name: device
@@ -240,7 +328,7 @@ blocks:
     label: Device string
     short_id: ''
     type: str
-    value: '"airspy=0,linearity=1"'
+    value: '"airspy=0,linearity=1,bias=1"'
   states:
     bus_sink: false
     bus_source: false
@@ -257,7 +345,7 @@ blocks:
     label: Frequency 1
     short_id: ''
     type: eng_float
-    value: 400.0e6
+    value: 140e6
   states:
     bus_sink: false
     bus_source: false
@@ -274,7 +362,7 @@ blocks:
     label: Frequency 2
     short_id: ''
     type: eng_float
-    value: 405e6
+    value: 145e6
   states:
     bus_sink: false
     bus_source: false
@@ -488,7 +576,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [264, 900.0]
+    coordinate: [200, 876.0]
     rotation: 0
     state: true
 - name: note_2
@@ -1020,7 +1108,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [24, 972.0]
+    coordinate: [24, 1028.0]
     rotation: 0
     state: true
 - name: wwv_doplog
@@ -1121,6 +1209,10 @@ blocks:
     state: true
 
 connections:
+- [analog_agc_xx_0, '0', analog_pll_refout_cc_0, '0']
+- [analog_agc_xx_0_0, '0', analog_pll_refout_cc_0_0, '0']
+- [analog_pll_refout_cc_0, '0', analog_quadrature_demod_cf_0, '0']
+- [analog_pll_refout_cc_0_0, '0', analog_quadrature_demod_cf_0_0, '0']
 - [analog_quadrature_demod_cf_0, '0', single_pole_iir_filter_xx_0, '0']
 - [analog_quadrature_demod_cf_0_0, '0', single_pole_iir_filter_xx_0_0, '0']
 - [blocks_complex_to_mag_squared_0, '0', single_pole_iir_filter_xx_0_1, '0']
@@ -1137,9 +1229,9 @@ connections:
 - [single_pole_iir_filter_xx_0_0, '0', wwv_doplog_0, '0']
 - [single_pole_iir_filter_xx_0_0_0, '0', wwv_doplog_0, '1']
 - [single_pole_iir_filter_xx_0_1, '0', wwv_doplog, '1']
-- [virtual_source_0, '0', analog_quadrature_demod_cf_0, '0']
+- [virtual_source_0, '0', analog_agc_xx_0, '0']
 - [virtual_source_0, '0', blocks_complex_to_mag_squared_0, '0']
-- [virtual_source_0_0, '0', analog_quadrature_demod_cf_0_0, '0']
+- [virtual_source_0_0, '0', analog_agc_xx_0_0, '0']
 - [virtual_source_0_0, '0', blocks_complex_to_mag_squared_0_0, '0']
 
 metadata:
