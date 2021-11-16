@@ -101,7 +101,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: (10.0/(mid_rate/2.0))*math.pi
+    value: (7.5/(mid_rate/2.0))*math.pi
   states:
     bus_sink: false
     bus_source: false
@@ -179,10 +179,10 @@ blocks:
   parameters:
     beta: '6.76'
     comment: The taps for the filter above
-    cutoff_freq: '250'
+    cutoff_freq: '45'
     gain: '1.0'
     samp_rate: mid_rate
-    width: '50'
+    width: '10'
     win: firdes.WIN_HAMMING
   states:
     bus_sink: false
