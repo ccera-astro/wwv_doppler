@@ -21,7 +21,7 @@ options:
     run_options: run
     sizing_mode: fixed
     thread_safe_setters: ''
-    title: Not titled yet
+    title: WWV Doppler Measurement
     window_size: ''
   states:
     bus_sink: false
@@ -36,12 +36,12 @@ blocks:
   id: variable
   parameters:
     comment: Actual tuned center frequency
-    value: (f1+f2)/2.0
+    value: (uf1+uf2)/2.0
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [192, 500.0]
+    coordinate: [880, 516.0]
     rotation: 0
     state: true
 - name: first_len
@@ -101,12 +101,24 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: (50.0/(mid_rate/2.0))*math.pi
+    value: (10.0/(mid_rate/2.0))*math.pi
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [672, 740.0]
+    coordinate: [24, 908.0]
+    rotation: 0
+    state: true
+- name: pll_loop
+  id: variable
+  parameters:
+    comment: ''
+    value: math.pi/150
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [152, 908.0]
     rotation: 0
     state: true
 - name: samp_rate
@@ -167,16 +179,52 @@ blocks:
   parameters:
     beta: '6.76'
     comment: The taps for the filter above
-    cutoff_freq: '150'
+    cutoff_freq: '250'
     gain: '1.0'
     samp_rate: mid_rate
-    width: '40'
+    width: '50'
     win: firdes.WIN_HAMMING
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
     coordinate: [2056, 364.0]
+    rotation: 0
+    state: true
+- name: uf1
+  id: variable
+  parameters:
+    comment: ''
+    value: f1+upvf
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [848, 612.0]
+    rotation: 0
+    state: true
+- name: uf2
+  id: variable
+  parameters:
+    comment: ''
+    value: f2+upvf
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [944, 612.0]
+    rotation: 0
+    state: true
+- name: upv
+  id: variable
+  parameters:
+    comment: ''
+    value: 120e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [480, 540.0]
     rotation: 0
     state: true
 - name: analog_agc_xx_0
@@ -229,7 +277,7 @@ blocks:
     maxoutbuf: '0'
     min_freq: -pll_limit
     minoutbuf: '0'
-    w: 3.14159/20
+    w: math.pi/100
   states:
     bus_sink: false
     bus_source: false
@@ -247,7 +295,7 @@ blocks:
     maxoutbuf: '0'
     min_freq: -pll_limit
     minoutbuf: '0'
-    w: 3.14159/20
+    w: math.pi/100
   states:
     bus_sink: false
     bus_source: false
@@ -268,7 +316,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [656, 820.0]
+    coordinate: [696, 756.0]
     rotation: 0
     state: true
 - name: analog_quadrature_demod_cf_0_0
@@ -300,7 +348,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [520, 892.0]
+    coordinate: [472, 860.0]
     rotation: 0
     state: true
 - name: blocks_complex_to_mag_squared_0_0
@@ -316,7 +364,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [528, 1148.0]
+    coordinate: [464, 1124.0]
     rotation: 0
     state: true
 - name: device
@@ -345,7 +393,7 @@ blocks:
     label: Frequency 1
     short_id: ''
     type: eng_float
-    value: 140e6
+    value: 15e6
   states:
     bus_sink: false
     bus_source: false
@@ -362,7 +410,7 @@ blocks:
     label: Frequency 2
     short_id: ''
     type: eng_float
-    value: 145e6
+    value: 20e6
   states:
     bus_sink: false
     bus_source: false
@@ -455,7 +503,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    center_freq: f1-fc
+    center_freq: uf1-fc
     comment: 'RF tuning is arranged to sit
 
       exactly half-way between
@@ -482,7 +530,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    center_freq: f2-fc
+    center_freq: uf2-fc
     comment: 'F tuning is arranged to sit
 
       exactly half-way between
@@ -576,7 +624,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [200, 876.0]
+    coordinate: [696, 892.0]
     rotation: 0
     state: true
 - name: note_2
@@ -593,7 +641,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [960, 700.0]
+    coordinate: [1328, 620.0]
     rotation: 0
     state: true
 - name: osmosdr_source_0
@@ -1002,7 +1050,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [944, 820.0]
+    coordinate: [960, 772.0]
     rotation: 0
     state: true
 - name: single_pole_iir_filter_xx_0_0
@@ -1038,7 +1086,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [944, 1044.0]
+    coordinate: [920, 1108.0]
     rotation: 0
     state: true
 - name: single_pole_iir_filter_xx_0_1
@@ -1056,7 +1104,24 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [944, 892.0]
+    coordinate: [952, 868.0]
+    rotation: 0
+    state: true
+- name: upvf
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Upconverter conversion frequency
+    short_id: ''
+    type: eng_float
+    value: 120e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [200, 516.0]
     rotation: 0
     state: true
 - name: virtual_sink_0
@@ -1147,7 +1212,7 @@ blocks:
     lograte: logtime
     maxoutbuf: '0'
     minoutbuf: '0'
-    prefix: prefix+"%6.2fMHz-" % (f1/1.0e6)
+    prefix: prefix+"%-6.2fMHz-" % (f1/1.0e6)
     srate: mid_rate
   states:
     _io_cache: ('WWV Doppler Logger', 'blk', [('prefix', "'./'"), ('lograte', '10.0'),
@@ -1156,7 +1221,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1200, 860.0]
+    coordinate: [1200, 812.0]
     rotation: 0
     state: true
 - name: wwv_doplog_0
@@ -1195,7 +1260,7 @@ blocks:
     lograte: logtime
     maxoutbuf: '0'
     minoutbuf: '0'
-    prefix: prefix+"%6.2fMHz-" % (f2/1.0e6)
+    prefix: prefix+"%-6.2fMHz-" % (f2/1.0e6)
     srate: mid_rate
   states:
     _io_cache: ('WWV Doppler Logger', 'blk', [('prefix', "'./'"), ('lograte', '10.0'),
