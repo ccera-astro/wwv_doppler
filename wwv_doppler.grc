@@ -1212,7 +1212,7 @@ blocks:
     lograte: logtime
     maxoutbuf: '0'
     minoutbuf: '0'
-    prefix: prefix+"%-6.2fMHz-" % (f1/1.0e6)
+    prefix: prefix+"%-.2fMHz-" % (f1/1.0e6)
     srate: mid_rate
   states:
     _io_cache: ('WWV Doppler Logger', 'blk', [('prefix', "'./'"), ('lograte', '10.0'),
@@ -1260,7 +1260,7 @@ blocks:
     lograte: logtime
     maxoutbuf: '0'
     minoutbuf: '0'
-    prefix: prefix+"%-6.2fMHz-" % (f2/1.0e6)
+    prefix: prefix+"%-.2fMHz-" % (f2/1.0e6)
     srate: mid_rate
   states:
     _io_cache: ('WWV Doppler Logger', 'blk', [('prefix', "'./'"), ('lograte', '10.0'),
