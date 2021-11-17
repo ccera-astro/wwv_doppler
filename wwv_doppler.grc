@@ -162,6 +162,50 @@ blocks:
     coordinate: [1864, 364.0]
     rotation: 0
     state: true
+- name: snr_fft_size
+  id: variable
+  parameters:
+    comment: ''
+    value: '512'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [168, 1148.0]
+    rotation: 0
+    state: true
+- name: snr_out1
+  id: variable_function_probe
+  parameters:
+    block_id: snr_probe1
+    comment: ''
+    function_args: ''
+    function_name: level
+    poll_rate: '5'
+    value: '1.0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1520, 1148.0]
+    rotation: 0
+    state: true
+- name: snr_out2
+  id: variable_function_probe
+  parameters:
+    block_id: snr_probe2
+    comment: ''
+    function_args: ''
+    function_name: level
+    poll_rate: '5'
+    value: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1512, 1356.0]
+    rotation: 0
+    state: true
 - name: third_len
   id: variable
   parameters:
@@ -179,7 +223,7 @@ blocks:
   parameters:
     beta: '6.76'
     comment: The taps for the filter above
-    cutoff_freq: '45'
+    cutoff_freq: '40'
     gain: '1.0'
     samp_rate: mid_rate
     width: '10'
@@ -348,7 +392,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [472, 860.0]
+    coordinate: [696, 884.0]
     rotation: 0
     state: true
 - name: blocks_complex_to_mag_squared_0_0
@@ -364,7 +408,75 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [464, 1124.0]
+    coordinate: [688, 1100.0]
+    rotation: 0
+    state: true
+- name: blocks_complex_to_mag_squared_1
+  id: blocks_complex_to_mag_squared
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    vlen: snr_fft_size
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [680, 1236.0]
+    rotation: 0
+    state: true
+- name: blocks_complex_to_mag_squared_1_0
+  id: blocks_complex_to_mag_squared
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    vlen: snr_fft_size
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [672, 1460.0]
+    rotation: 0
+    state: true
+- name: blocks_stream_to_vector_0
+  id: blocks_stream_to_vector
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_items: snr_fft_size
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [192, 1244.0]
+    rotation: 0
+    state: true
+- name: blocks_stream_to_vector_0_0
+  id: blocks_stream_to_vector
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_items: snr_fft_size
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [184, 1444.0]
     rotation: 0
     state: true
 - name: device
@@ -498,6 +610,48 @@ blocks:
     coordinate: [728, 372.0]
     rotation: 0
     state: true
+- name: fft_vxx_0
+  id: fft_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    fft_size: snr_fft_size
+    forward: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    nthreads: '1'
+    shift: 'True'
+    type: complex
+    window: window.blackmanharris(snr_fft_size)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [416, 1204.0]
+    rotation: 0
+    state: true
+- name: fft_vxx_0_0
+  id: fft_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    fft_size: snr_fft_size
+    forward: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    nthreads: '1'
+    shift: 'True'
+    type: complex
+    window: window.blackmanharris(snr_fft_size)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [408, 1428.0]
+    rotation: 0
+    state: true
 - name: freq_xlating_fft_filter_ccc_0
   id: freq_xlating_fft_filter_ccc
   parameters:
@@ -624,7 +778,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [696, 892.0]
+    coordinate: [384, 868.0]
     rotation: 0
     state: true
 - name: note_2
@@ -1068,25 +1222,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [944, 972.0]
-    rotation: 0
-    state: true
-- name: single_pole_iir_filter_xx_0_0_0
-  id: single_pole_iir_filter_xx
-  parameters:
-    affinity: ''
-    alias: ''
-    alpha: 1.0/(mid_rate*10)
-    comment: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    type: float
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [920, 1108.0]
+    coordinate: [1032, 996.0]
     rotation: 0
     state: true
 - name: single_pole_iir_filter_xx_0_1
@@ -1104,7 +1240,167 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [952, 868.0]
+    coordinate: [952, 852.0]
+    rotation: 0
+    state: true
+- name: single_pole_iir_filter_xx_0_1_0
+  id: single_pole_iir_filter_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha: 1.0/(mid_rate*10)
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1040, 1076.0]
+    rotation: 0
+    state: true
+- name: single_pole_iir_filter_xx_1
+  id: single_pole_iir_filter_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha: 1.0/10.0
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+    vlen: snr_fft_size
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1024, 1236.0]
+    rotation: 0
+    state: true
+- name: single_pole_iir_filter_xx_1_0
+  id: single_pole_iir_filter_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha: 1.0/10.0
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+    vlen: snr_fft_size
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1024, 1452.0]
+    rotation: 0
+    state: true
+- name: snr_estimator_1
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\n\n\nclass blk(gr.sync_block):  # other base classes\
+      \ are basic_block, decim_block, interp_block\n    \"\"\"Embedded Python Block\
+      \ example - a simple multiply const\"\"\"\n\n    def __init__(self, fftsize=512):\
+      \  # only default arguments here\n        \"\"\"arguments to this function show\
+      \ up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n         \
+      \   self,\n            name='FFT-based SNR estimator',   # will show up in GRC\n\
+      \            in_sig=[(np.float32,fftsize)],\n            out_sig=[np.float32]\n\
+      \        )\n        # if an attribute with the same name as a parameter is found,\n\
+      \        # a callback is registered (properties work, too).\n        self.fftsize\
+      \ = fftsize\n\n    def work(self, input_items, output_items):\n        \"\"\"\
+      Extract SNR estimate\"\"\"\n        fs = self.fftsize\n        for x in range(len(output_items[0])):\n\
+      \            v = input_items[0][x]\n            mid = int(self.fftsize/2)\n\
+      \            signal = np.mean(v[mid-1:mid+1])\n            n1 = np.mean(v[mid-7:mid-4])\n\
+      \            n2  = np.mean(v[mid+4:mid+7])\n            na = (n1+n2)/2.0\n \
+      \           snr = signal/na\n            output_items[0][x] = snr\n        return\
+      \ len(output_items[0])\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    fftsize: '512'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('FFT-based SNR estimator', 'blk', [('fftsize', '512')], [('0', 'float',
+      512)], [('0', 'float', 1)], 'Embedded Python Block example - a simple multiply
+      const', ['fftsize'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1264, 1244.0]
+    rotation: 0
+    state: true
+- name: snr_estimator_1_0
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\n\n\nclass blk(gr.sync_block):  # other base classes\
+      \ are basic_block, decim_block, interp_block\n    \"\"\"Embedded Python Block\
+      \ example - a simple multiply const\"\"\"\n\n    def __init__(self, fftsize=512):\
+      \  # only default arguments here\n        \"\"\"arguments to this function show\
+      \ up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n         \
+      \   self,\n            name='FFT-based SNR estimator',   # will show up in GRC\n\
+      \            in_sig=[(np.float32,fftsize)],\n            out_sig=[np.float32]\n\
+      \        )\n        # if an attribute with the same name as a parameter is found,\n\
+      \        # a callback is registered (properties work, too).\n        self.fftsize\
+      \ = fftsize\n\n    def work(self, input_items, output_items):\n        \"\"\"\
+      Extract SNR estimate\"\"\"\n        fs = self.fftsize\n        for x in range(len(output_items[0])):\n\
+      \            v = input_items[0][x]\n            mid = int(self.fftsize/2)\n\
+      \            signal = np.mean(v[mid-1:mid+1])\n            n1 = np.mean(v[mid-7:mid-4])\n\
+      \            n2  = np.mean(v[mid+4:mid+7])\n            na = (n1+n2)/2.0\n \
+      \           snr = signal/na\n            output_items[0][x] = snr\n        return\
+      \ len(output_items[0])\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    fftsize: '512'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('FFT-based SNR estimator', 'blk', [('fftsize', '512')], [('0', 'float',
+      512)], [('0', 'float', 1)], 'Embedded Python Block example - a simple multiply
+      const', ['fftsize'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1264, 1436.0]
+    rotation: 0
+    state: true
+- name: snr_probe1
+  id: blocks_probe_signal_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    type: float
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1520, 1252.0]
+    rotation: 0
+    state: true
+- name: snr_probe2
+  id: blocks_probe_signal_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    type: float
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1520, 1460.0]
     rotation: 0
     state: true
 - name: upvf
@@ -1176,7 +1472,33 @@ blocks:
     coordinate: [24, 1028.0]
     rotation: 0
     state: true
-- name: wwv_doplog
+- name: virtual_source_0_1
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: filtered_rf1
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [16, 1236.0]
+    rotation: 0
+    state: true
+- name: virtual_source_0_1_0
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: filtered_rf2
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [-16, 1428.0]
+    rotation: 0
+    state: true
+- name: wwv_doplog_1
   id: epy_block
   parameters:
     _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
@@ -1185,27 +1507,28 @@ blocks:
       \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
       from gnuradio import gr\nimport time\n\n\nclass blk(gr.sync_block):  # other\
       \ base classes are basic_block, decim_block, interp_block\n    \"\"\"Doppler\
-      \ Logger\"\"\"\n\n    def __init__(self, prefix=\"./\", lograte=10.0, srate=1000):\
-      \  # only default arguments here\n        \"\"\"arguments to this function show\
-      \ up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n         \
-      \   self,\n            name='WWV Doppler Logger',   # will show up in GRC\n\
-      \            in_sig=[np.float32]*2,\n            out_sig=None\n        )\n \
-      \       # if an attribute with the same name as a parameter is found,\n    \
-      \    # a callback is registered (properties work, too).\n        self.prefix\
+      \ Logger\"\"\"\n\n    def __init__(self, prefix=\"./\", lograte=10.0, srate=1000,\
+      \ snr=1.0):  # only default arguments here\n        \"\"\"arguments to this\
+      \ function show up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n\
+      \            self,\n            name='WWV Doppler Logger',   # will show up\
+      \ in GRC\n            in_sig=[np.float32]*2,\n            out_sig=None\n   \
+      \     )\n        # if an attribute with the same name as a parameter is found,\n\
+      \        # a callback is registered (properties work, too).\n        self.prefix\
       \ = prefix\n        self.lograte = lograte\n        self.avg = 0.0\n       \
       \ self.pavg = 0.0\n        self.acnt = 0\n        self.now = time.time()\n \
-      \       self.srate = srate\n\n    def work(self, input_items, output_items):\n\
-      \        \"\"\"Log frequency offsets\"\"\"\n        for x in range(len(input_items[0])):\n\
-      \            self.avg += input_items[0][x]\n            self.pavg += input_items[1][x]\n\
-      \            self.acnt += 1\n            if (self.acnt >= (self.srate * self.lograte)):\n\
-      \                self.avg /= self.acnt\n                self.pavg /= self.acnt\n\
-      \                self.acnt = 0\n                ltp = time.gmtime()\n      \
-      \          d = \"%04d%02d%02d\" % (ltp.tm_year, ltp.tm_mon, ltp.tm_mday)\n \
-      \               fn = self.prefix + d + \".csv\"\n                fp = open(fn,\
-      \ \"a\")\n                db = np.log10(self.pavg+1.0e-14)*10.0\n          \
-      \      fp.write (\"%02d,%02d,%02d,%f,%f\\n\" % (ltp.tm_hour, ltp.tm_min, ltp.tm_sec,\
-      \ self.avg,db))\n                self.avg = 0\n                fp.close()\n\
-      \            \n        \n        return len(input_items[0])\n"
+      \       self.srate = srate\n        self.snr = 1.0\n\n    def work(self, input_items,\
+      \ output_items):\n        \"\"\"Log frequency offsets\"\"\"\n        for x in\
+      \ range(len(input_items[0])):\n            self.avg += input_items[0][x]\n \
+      \           self.pavg += input_items[1][x]\n            self.acnt += 1\n   \
+      \         if (self.acnt >= (self.srate * self.lograte)):\n                self.avg\
+      \ /= self.acnt\n                self.pavg /= self.acnt\n                self.acnt\
+      \ = 0\n                ltp = time.gmtime()\n                d = \"%04d%02d%02d\"\
+      \ % (ltp.tm_year, ltp.tm_mon, ltp.tm_mday)\n                fn = self.prefix\
+      \ + d + \".csv\"\n                fp = open(fn, \"a\")\n                db =\
+      \ np.log10(self.pavg+1.0e-14)*10.0\n                fp.write (\"%02d,%02d,%02d,%f,%f,%f\\\
+      n\" % (ltp.tm_hour, ltp.tm_min, ltp.tm_sec, self.avg,db,self.snr))\n       \
+      \         self.avg = 0\n                fp.close()\n            \n        \n\
+      \        return len(input_items[0])\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -1213,18 +1536,19 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     prefix: prefix+"%-.2fMHz-" % (f1/1.0e6)
+    snr: snr_out1
     srate: mid_rate
   states:
     _io_cache: ('WWV Doppler Logger', 'blk', [('prefix', "'./'"), ('lograte', '10.0'),
-      ('srate', '1000')], [('0', 'float', 1), ('1', 'float', 1)], [], 'Doppler Logger',
-      ['lograte', 'prefix', 'srate'])
+      ('srate', '1000'), ('snr', '1.0')], [('0', 'float', 1), ('1', 'float', 1)],
+      [], 'Doppler Logger', ['lograte', 'prefix', 'snr', 'srate'])
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1200, 812.0]
+    coordinate: [1440, 788.0]
     rotation: 0
     state: true
-- name: wwv_doplog_0
+- name: wwv_doplog_2
   id: epy_block
   parameters:
     _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
@@ -1233,27 +1557,28 @@ blocks:
       \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
       from gnuradio import gr\nimport time\n\n\nclass blk(gr.sync_block):  # other\
       \ base classes are basic_block, decim_block, interp_block\n    \"\"\"Doppler\
-      \ Logger\"\"\"\n\n    def __init__(self, prefix=\"./\", lograte=10.0, srate=1000):\
-      \  # only default arguments here\n        \"\"\"arguments to this function show\
-      \ up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n         \
-      \   self,\n            name='WWV Doppler Logger',   # will show up in GRC\n\
-      \            in_sig=[np.float32]*2,\n            out_sig=None\n        )\n \
-      \       # if an attribute with the same name as a parameter is found,\n    \
-      \    # a callback is registered (properties work, too).\n        self.prefix\
+      \ Logger\"\"\"\n\n    def __init__(self, prefix=\"./\", lograte=10.0, srate=1000,\
+      \ snr=1.0):  # only default arguments here\n        \"\"\"arguments to this\
+      \ function show up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n\
+      \            self,\n            name='WWV Doppler Logger',   # will show up\
+      \ in GRC\n            in_sig=[np.float32]*2,\n            out_sig=None\n   \
+      \     )\n        # if an attribute with the same name as a parameter is found,\n\
+      \        # a callback is registered (properties work, too).\n        self.prefix\
       \ = prefix\n        self.lograte = lograte\n        self.avg = 0.0\n       \
       \ self.pavg = 0.0\n        self.acnt = 0\n        self.now = time.time()\n \
-      \       self.srate = srate\n\n    def work(self, input_items, output_items):\n\
-      \        \"\"\"Log frequency offsets\"\"\"\n        for x in range(len(input_items[0])):\n\
-      \            self.avg += input_items[0][x]\n            self.pavg += input_items[1][x]\n\
-      \            self.acnt += 1\n            if (self.acnt >= (self.srate * self.lograte)):\n\
-      \                self.avg /= self.acnt\n                self.pavg /= self.acnt\n\
-      \                self.acnt = 0\n                ltp = time.gmtime()\n      \
-      \          d = \"%04d%02d%02d\" % (ltp.tm_year, ltp.tm_mon, ltp.tm_mday)\n \
-      \               fn = self.prefix + d + \".csv\"\n                fp = open(fn,\
-      \ \"a\")\n                db = np.log10(self.pavg+1.0e-14)*10.0\n          \
-      \      fp.write (\"%02d,%02d,%02d,%f,%f\\n\" % (ltp.tm_hour, ltp.tm_min, ltp.tm_sec,\
-      \ self.avg,db))\n                self.avg = 0\n                fp.close()\n\
-      \            \n        \n        return len(input_items[0])\n"
+      \       self.srate = srate\n        self.snr = 1.0\n\n    def work(self, input_items,\
+      \ output_items):\n        \"\"\"Log frequency offsets\"\"\"\n        for x in\
+      \ range(len(input_items[0])):\n            self.avg += input_items[0][x]\n \
+      \           self.pavg += input_items[1][x]\n            self.acnt += 1\n   \
+      \         if (self.acnt >= (self.srate * self.lograte)):\n                self.avg\
+      \ /= self.acnt\n                self.pavg /= self.acnt\n                self.acnt\
+      \ = 0\n                ltp = time.gmtime()\n                d = \"%04d%02d%02d\"\
+      \ % (ltp.tm_year, ltp.tm_mon, ltp.tm_mday)\n                fn = self.prefix\
+      \ + d + \".csv\"\n                fp = open(fn, \"a\")\n                db =\
+      \ np.log10(self.pavg+1.0e-14)*10.0\n                fp.write (\"%02d,%02d,%02d,%f,%f,%f\\\
+      n\" % (ltp.tm_hour, ltp.tm_min, ltp.tm_sec, self.avg,db,self.snr))\n       \
+      \         self.avg = 0\n                fp.close()\n            \n        \n\
+      \        return len(input_items[0])\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -1261,15 +1586,16 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     prefix: prefix+"%-.2fMHz-" % (f2/1.0e6)
+    snr: snr_out2
     srate: mid_rate
   states:
     _io_cache: ('WWV Doppler Logger', 'blk', [('prefix', "'./'"), ('lograte', '10.0'),
-      ('srate', '1000')], [('0', 'float', 1), ('1', 'float', 1)], [], 'Doppler Logger',
-      ['lograte', 'prefix', 'srate'])
+      ('srate', '1000'), ('snr', '1.0')], [('0', 'float', 1), ('1', 'float', 1)],
+      [], 'Doppler Logger', ['lograte', 'prefix', 'snr', 'srate'])
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1192, 1004.0]
+    coordinate: [1448, 964.0]
     rotation: 0
     state: true
 
@@ -1281,23 +1607,35 @@ connections:
 - [analog_quadrature_demod_cf_0, '0', single_pole_iir_filter_xx_0, '0']
 - [analog_quadrature_demod_cf_0_0, '0', single_pole_iir_filter_xx_0_0, '0']
 - [blocks_complex_to_mag_squared_0, '0', single_pole_iir_filter_xx_0_1, '0']
-- [blocks_complex_to_mag_squared_0_0, '0', single_pole_iir_filter_xx_0_0_0, '0']
+- [blocks_complex_to_mag_squared_0_0, '0', single_pole_iir_filter_xx_0_1_0, '0']
+- [blocks_complex_to_mag_squared_1, '0', single_pole_iir_filter_xx_1, '0']
+- [blocks_complex_to_mag_squared_1_0, '0', single_pole_iir_filter_xx_1_0, '0']
+- [blocks_stream_to_vector_0, '0', fft_vxx_0, '0']
+- [blocks_stream_to_vector_0_0, '0', fft_vxx_0_0, '0']
 - [fft_filter_xxx_0, '0', fft_filter_xxx_0_0, '0']
 - [fft_filter_xxx_0_0, '0', virtual_sink_0, '0']
 - [fft_filter_xxx_0_0_0, '0', virtual_sink_0_0, '0']
 - [fft_filter_xxx_0_1, '0', fft_filter_xxx_0_0_0, '0']
+- [fft_vxx_0, '0', blocks_complex_to_mag_squared_1, '0']
+- [fft_vxx_0_0, '0', blocks_complex_to_mag_squared_1_0, '0']
 - [freq_xlating_fft_filter_ccc_0, '0', fft_filter_xxx_0, '0']
 - [freq_xlating_fft_filter_ccc_0_0, '0', fft_filter_xxx_0_1, '0']
 - [osmosdr_source_0, '0', freq_xlating_fft_filter_ccc_0, '0']
 - [osmosdr_source_0, '0', freq_xlating_fft_filter_ccc_0_0, '0']
-- [single_pole_iir_filter_xx_0, '0', wwv_doplog, '0']
-- [single_pole_iir_filter_xx_0_0, '0', wwv_doplog_0, '0']
-- [single_pole_iir_filter_xx_0_0_0, '0', wwv_doplog_0, '1']
-- [single_pole_iir_filter_xx_0_1, '0', wwv_doplog, '1']
+- [single_pole_iir_filter_xx_0, '0', wwv_doplog_1, '0']
+- [single_pole_iir_filter_xx_0_0, '0', wwv_doplog_2, '0']
+- [single_pole_iir_filter_xx_0_1, '0', wwv_doplog_1, '1']
+- [single_pole_iir_filter_xx_0_1_0, '0', wwv_doplog_2, '1']
+- [single_pole_iir_filter_xx_1, '0', snr_estimator_1, '0']
+- [single_pole_iir_filter_xx_1_0, '0', snr_estimator_1_0, '0']
+- [snr_estimator_1, '0', snr_probe1, '0']
+- [snr_estimator_1_0, '0', snr_probe2, '0']
 - [virtual_source_0, '0', analog_agc_xx_0, '0']
 - [virtual_source_0, '0', blocks_complex_to_mag_squared_0, '0']
 - [virtual_source_0_0, '0', analog_agc_xx_0_0, '0']
 - [virtual_source_0_0, '0', blocks_complex_to_mag_squared_0_0, '0']
+- [virtual_source_0_1, '0', blocks_stream_to_vector_0, '0']
+- [virtual_source_0_1_0, '0', blocks_stream_to_vector_0_0, '0']
 
 metadata:
   file_format: 1
