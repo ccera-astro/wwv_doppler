@@ -198,7 +198,7 @@ blocks:
     function_args: ''
     function_name: level
     poll_rate: '5'
-    value: '0'
+    value: '1.0'
   states:
     bus_sink: false
     bus_source: false
@@ -1516,19 +1516,24 @@ blocks:
       \        # a callback is registered (properties work, too).\n        self.prefix\
       \ = prefix\n        self.lograte = lograte\n        self.avg = 0.0\n       \
       \ self.pavg = 0.0\n        self.acnt = 0\n        self.now = time.time()\n \
-      \       self.srate = srate\n        self.snr = 1.0\n\n    def work(self, input_items,\
-      \ output_items):\n        \"\"\"Log frequency offsets\"\"\"\n        for x in\
-      \ range(len(input_items[0])):\n            self.avg += input_items[0][x]\n \
-      \           self.pavg += input_items[1][x]\n            self.acnt += 1\n   \
-      \         if (self.acnt >= (self.srate * self.lograte)):\n                self.avg\
-      \ /= self.acnt\n                self.pavg /= self.acnt\n                self.acnt\
-      \ = 0\n                ltp = time.gmtime()\n                d = \"%04d%02d%02d\"\
-      \ % (ltp.tm_year, ltp.tm_mon, ltp.tm_mday)\n                fn = self.prefix\
-      \ + d + \".csv\"\n                fp = open(fn, \"a\")\n                db =\
-      \ np.log10(self.pavg+1.0e-14)*10.0\n                fp.write (\"%02d,%02d,%02d,%f,%f,%f\\\
-      n\" % (ltp.tm_hour, ltp.tm_min, ltp.tm_sec, self.avg,db,self.snr))\n       \
-      \         self.avg = 0\n                fp.close()\n            \n        \n\
-      \        return len(input_items[0])\n"
+      \       self.srate = srate\n        self.snr = 1.0\n        self.snravg = 1.0\n\
+      \        self.cursnr = 1.0\n        self.snrcnt = 0\n\n    def work(self, input_items,\
+      \ output_items):\n        \"\"\"Log frequency offsets\"\"\"\n        if (self.cursnr\
+      \ != self.snr):\n            self.cursnr = self.snr\n            self.snravg\
+      \ += self.snr\n            self.snrcnt += 1\n        for x in range(len(input_items[0])):\n\
+      \            self.avg += input_items[0][x]\n            self.pavg += input_items[1][x]\n\
+      \            self.acnt += 1\n            if (self.acnt >= (self.srate * self.lograte)):\n\
+      \                self.avg /= self.acnt\n                self.pavg /= self.acnt\n\
+      \                self.acnt = 0\n                ltp = time.gmtime()\n      \
+      \          d = \"%04d%02d%02d\" % (ltp.tm_year, ltp.tm_mon, ltp.tm_mday)\n \
+      \               fn = self.prefix + d + \".csv\"\n                fp = open(fn,\
+      \ \"a\")\n                db = np.log10(self.pavg+1.0e-14)*10.0\n          \
+      \      if (self.snrcnt):\n                    snra = self.snravg / self.snrcnt\n\
+      \                    self.snrcnt = 0\n                    self.snravg = 1.0\n\
+      \                else:\n                    snra = self.snr\n              \
+      \  fp.write (\"%02d,%02d,%02d,%f,%f,%f\\n\" % (ltp.tm_hour, ltp.tm_min, ltp.tm_sec,\
+      \ self.avg,db,snra))\n                self.avg = 0\n                fp.close()\n\
+      \            \n        \n        return len(input_items[0])\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -1566,19 +1571,24 @@ blocks:
       \        # a callback is registered (properties work, too).\n        self.prefix\
       \ = prefix\n        self.lograte = lograte\n        self.avg = 0.0\n       \
       \ self.pavg = 0.0\n        self.acnt = 0\n        self.now = time.time()\n \
-      \       self.srate = srate\n        self.snr = 1.0\n\n    def work(self, input_items,\
-      \ output_items):\n        \"\"\"Log frequency offsets\"\"\"\n        for x in\
-      \ range(len(input_items[0])):\n            self.avg += input_items[0][x]\n \
-      \           self.pavg += input_items[1][x]\n            self.acnt += 1\n   \
-      \         if (self.acnt >= (self.srate * self.lograte)):\n                self.avg\
-      \ /= self.acnt\n                self.pavg /= self.acnt\n                self.acnt\
-      \ = 0\n                ltp = time.gmtime()\n                d = \"%04d%02d%02d\"\
-      \ % (ltp.tm_year, ltp.tm_mon, ltp.tm_mday)\n                fn = self.prefix\
-      \ + d + \".csv\"\n                fp = open(fn, \"a\")\n                db =\
-      \ np.log10(self.pavg+1.0e-14)*10.0\n                fp.write (\"%02d,%02d,%02d,%f,%f,%f\\\
-      n\" % (ltp.tm_hour, ltp.tm_min, ltp.tm_sec, self.avg,db,self.snr))\n       \
-      \         self.avg = 0\n                fp.close()\n            \n        \n\
-      \        return len(input_items[0])\n"
+      \       self.srate = srate\n        self.snr = 1.0\n        self.snravg = 1.0\n\
+      \        self.cursnr = 1.0\n        self.snrcnt = 0\n\n    def work(self, input_items,\
+      \ output_items):\n        \"\"\"Log frequency offsets\"\"\"\n        if (self.cursnr\
+      \ != self.snr):\n            self.cursnr = self.snr\n            self.snravg\
+      \ += self.snr\n            self.snrcnt += 1\n        for x in range(len(input_items[0])):\n\
+      \            self.avg += input_items[0][x]\n            self.pavg += input_items[1][x]\n\
+      \            self.acnt += 1\n            if (self.acnt >= (self.srate * self.lograte)):\n\
+      \                self.avg /= self.acnt\n                self.pavg /= self.acnt\n\
+      \                self.acnt = 0\n                ltp = time.gmtime()\n      \
+      \          d = \"%04d%02d%02d\" % (ltp.tm_year, ltp.tm_mon, ltp.tm_mday)\n \
+      \               fn = self.prefix + d + \".csv\"\n                fp = open(fn,\
+      \ \"a\")\n                db = np.log10(self.pavg+1.0e-14)*10.0\n          \
+      \      if (self.snrcnt):\n                    snra = self.snravg / self.snrcnt\n\
+      \                    self.snrcnt = 0\n                    self.snravg = 1.0\n\
+      \                else:\n                    snra = self.snr\n              \
+      \  fp.write (\"%02d,%02d,%02d,%f,%f,%f\\n\" % (ltp.tm_hour, ltp.tm_min, ltp.tm_sec,\
+      \ self.avg,db,snra))\n                self.avg = 0\n                fp.close()\n\
+      \            \n        \n        return len(input_items[0])\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -1595,7 +1605,21 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1448, 964.0]
+    coordinate: [1432, 956.0]
+    rotation: 0
+    state: true
+- name: xmlrpc_server_0
+  id: xmlrpc_server
+  parameters:
+    addr: localhost
+    alias: ''
+    comment: ''
+    port: '51015'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1760, 660.0]
     rotation: 0
     state: true
 
