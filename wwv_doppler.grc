@@ -365,7 +365,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    gain: ((1.0/(math.pi*2.0))*mid_rate)*zoom
+    gain: ((1.0/(math.pi*2.0))*mid_rate)*(1.0/farray[0])*1.0e9
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
@@ -381,7 +381,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    gain: ((1.0/(math.pi*2.0))*mid_rate)*zoom
+    gain: ((1.0/(math.pi*2.0))*mid_rate)*(1.0/farray[1])*1.0e9
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
