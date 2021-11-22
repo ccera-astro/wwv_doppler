@@ -365,7 +365,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    gain: (1.0/(math.pi*2.0))*mid_rate
+    gain: ((1.0/(math.pi*2.0))*mid_rate)*zoom
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
@@ -381,7 +381,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    gain: (1.0/(math.pi*2.0))*mid_rate
+    gain: ((1.0/(math.pi*2.0))*mid_rate)*zoom
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
@@ -1634,6 +1634,23 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [1760, 660.0]
+    rotation: 0
+    state: true
+- name: zoom
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Zoom factor for frequency offset
+    short_id: ''
+    type: eng_float
+    value: '1.0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [648, 492.0]
     rotation: 0
     state: true
 
