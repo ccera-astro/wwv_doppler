@@ -1337,14 +1337,12 @@ blocks:
       \            #\n            # Noise components\n            #\n            n1\
       \ = np.mean(v[mid-7:mid-4])\n            n2  = np.mean(v[mid+4:mid+7])\n   \
       \         na = (n1+n2)/2.0\n            \n            #\n            # 100Hz\
-      \ sub-carrer\n            #\n            hh = v[mid+hhz:mid+hhz+1]\n       \
-      \     hh += v[mid-hhz-1:mid-hhz]\n            hh /= 2.0\n\n            #\n \
-      \           # SNR estimate\n            #\n            snr = signal/na\n   \
-      \         \n            #\n            # If carrier to 100Hz ratio isn't within\
-      \ \"expected bounds\"\n            #\n            # Make SNR \"invalid\"\n \
-      \           #\n            if ((signal/hh > 1500.0) or (signal/hh < 10.0)):\n\
-      \                snr = 1.0\n            output_items[0][x] = snr\n        return\
-      \ len(output_items[0])\n"
+      \ sub-carrer\n            #\n            hh = v[mid+hhz]\n            hh +=\
+      \ v[mid-hhz]\n            hh /= 2.0\n\n            #\n            # SNR estimate--gated\
+      \ by 100Hz ratio\n            #\n            hratio = signal/hh\n          \
+      \  if (hratio > 40 and hratio < 1200):\n                snr = signal/na\n  \
+      \          else:\n                snr = 1.0\n\n            output_items[0][x]\
+      \ = snr\n        return len(output_items[0])\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -1390,14 +1388,12 @@ blocks:
       \            #\n            # Noise components\n            #\n            n1\
       \ = np.mean(v[mid-7:mid-4])\n            n2  = np.mean(v[mid+4:mid+7])\n   \
       \         na = (n1+n2)/2.0\n            \n            #\n            # 100Hz\
-      \ sub-carrer\n            #\n            hh = v[mid+hhz:mid+hhz+1]\n       \
-      \     hh += v[mid-hhz-1:mid-hhz]\n            hh /= 2.0\n\n            #\n \
-      \           # SNR estimate\n            #\n            snr = signal/na\n   \
-      \         \n            #\n            # If carrier to 100Hz ratio isn't within\
-      \ \"expected bounds\"\n            #\n            # Make SNR \"invalid\"\n \
-      \           #\n            if ((signal/hh > 1500.0) or (signal/hh < 10.0)):\n\
-      \                snr = 1.0\n            output_items[0][x] = snr\n        return\
-      \ len(output_items[0])\n"
+      \ sub-carrer\n            #\n            hh = v[mid+hhz]\n            hh +=\
+      \ v[mid-hhz]\n            hh /= 2.0\n\n            #\n            # SNR estimate--gated\
+      \ by 100Hz ratio\n            #\n            hratio = signal/hh\n          \
+      \  if (hratio > 40 and hratio < 1200):\n                snr = signal/na\n  \
+      \          else:\n                snr = 1.0\n\n            output_items[0][x]\
+      \ = snr\n        return len(output_items[0])\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -1412,7 +1408,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1264, 1452.0]
+    coordinate: [1272, 1428.0]
     rotation: 0
     state: true
 - name: snr_probe1
