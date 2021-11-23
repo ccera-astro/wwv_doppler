@@ -1339,10 +1339,11 @@ blocks:
       \         na = (n1+n2)/2.0\n            \n            #\n            # 100Hz\
       \ sub-carrer\n            #\n            hh = np.mean(v[mid+(hhz-1):mid+hhz+1])\n\
       \            hh += np.mean(v[mid-(hhz+1):mid-(hhz-1)])\n            hh /= 2.0\n\
-      \n            #\n            # SNR estimate--gated by 100Hz SNR\n          \
-      \  #\n            if ((hh / na) >= 5.0):\n                snr = signal/na\n\
-      \            else:\n                snr = 1.0\n\n            output_items[0][x]\
-      \ = snr\n        return len(output_items[0])\n"
+      \n            #\n            # SNR estimate\n            #\n            snr\
+      \ = signal/na\n            #\n            # SNR estimate is gated by 100Hz SNR\n\
+      \            #\n            if ((hh / na) >= 5.0 and snr >= 10):\n         \
+      \       snr = signal/na\n            else:\n                snr = 1.0\n\n  \
+      \          output_items[0][x] = snr\n        return len(output_items[0])\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -1390,10 +1391,11 @@ blocks:
       \         na = (n1+n2)/2.0\n            \n            #\n            # 100Hz\
       \ sub-carrer\n            #\n            hh = np.mean(v[mid+(hhz-1):mid+hhz+1])\n\
       \            hh += np.mean(v[mid-(hhz+1):mid-(hhz-1)])\n            hh /= 2.0\n\
-      \n            #\n            # SNR estimate--gated by 100Hz SNR\n          \
-      \  #\n            if ((hh / na) >= 5.0):\n                snr = signal/na\n\
-      \            else:\n                snr = 1.0\n\n            output_items[0][x]\
-      \ = snr\n        return len(output_items[0])\n"
+      \n            #\n            # SNR estimate\n            #\n            snr\
+      \ = signal/na\n            #\n            # SNR estimate is gated by 100Hz SNR\n\
+      \            #\n            if ((hh / na) >= 5.0 and snr >= 10):\n         \
+      \       snr = signal/na\n            else:\n                snr = 1.0\n\n  \
+      \          output_items[0][x] = snr\n        return len(output_items[0])\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -1408,7 +1410,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1272, 1436.0]
+    coordinate: [1280, 1428.0]
     rotation: 0
     state: true
 - name: snr_probe1
