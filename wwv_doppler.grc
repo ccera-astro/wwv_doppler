@@ -1318,19 +1318,32 @@ blocks:
       \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
       from gnuradio import gr\n\n\nclass blk(gr.sync_block):  # other base classes\
       \ are basic_block, decim_block, interp_block\n    \"\"\"Embedded Python Block\
-      \ example - a simple multiply const\"\"\"\n\n    def __init__(self, fftsize=512):\
+      \ example - a simple multiply const\"\"\"\n\n    def __init__(self, fftsize=512,srate=2500):\
       \  # only default arguments here\n        \"\"\"arguments to this function show\
       \ up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n         \
       \   self,\n            name='FFT-based SNR estimator',   # will show up in GRC\n\
       \            in_sig=[(np.float32,fftsize)],\n            out_sig=[np.float32]\n\
       \        )\n        # if an attribute with the same name as a parameter is found,\n\
       \        # a callback is registered (properties work, too).\n        self.fftsize\
-      \ = fftsize\n\n    def work(self, input_items, output_items):\n        \"\"\"\
-      Extract SNR estimate\"\"\"\n        fs = self.fftsize\n        for x in range(len(output_items[0])):\n\
-      \            v = input_items[0][x]\n            mid = int(self.fftsize/2)\n\
-      \            signal = np.mean(v[mid-1:mid+1])\n            n1 = np.mean(v[mid-7:mid-4])\n\
-      \            n2  = np.mean(v[mid+4:mid+7])\n            na = (n1+n2)/2.0\n \
-      \           snr = signal/na\n            output_items[0][x] = snr\n        return\
+      \ = fftsize\n        self.srate = srate\n\n    def work(self, input_items, output_items):\n\
+      \        \"\"\"Extract SNR estimate\"\"\"\n        fs = self.fftsize\n     \
+      \   #\n        # Determine bin size in Hz\n        #\n        binsize = self.srate\
+      \ / self.fftsize\n        \n        #\n        # Determine which offset-from-middle\
+      \ is 100Hz\n        # WWV has a 100Hz spectral artifact from the\n        #\
+      \ 100Hz sub-carrer\n        #\n        hhz = int(100.0/binsize)\n        for\
+      \ x in range(len(output_items[0])):\n            v = input_items[0][x]\n   \
+      \         mid = int(self.fftsize/2)\n            #\n            # Centre frequency\n\
+      \            #\n            signal = np.mean(v[mid-1:mid+1])\n            \n\
+      \            #\n            # Noise components\n            #\n            n1\
+      \ = np.mean(v[mid-7:mid-4])\n            n2  = np.mean(v[mid+4:mid+7])\n   \
+      \         na = (n1+n2)/2.0\n            \n            #\n            # 100Hz\
+      \ sub-carrer\n            #\n            hh = v[mid+hhz:mid+hhz+1]\n       \
+      \     hh += v[mid-hhz-1:mid-hhz]\n            hh /= 2.0\n\n            #\n \
+      \           # SNR estimate\n            #\n            snr = signal/na\n   \
+      \         \n            #\n            # If carrier to 100Hz ratio isn't within\
+      \ \"expected bounds\"\n            #\n            # Make SNR \"invalid\"\n \
+      \           #\n            if ((signal/hh > 1500.0) or (signal/hh < 10.0)):\n\
+      \                snr = 1.0\n            output_items[0][x] = snr\n        return\
       \ len(output_items[0])\n"
     affinity: ''
     alias: ''
@@ -1338,10 +1351,11 @@ blocks:
     fftsize: '512'
     maxoutbuf: '0'
     minoutbuf: '0'
+    srate: mid_rate
   states:
-    _io_cache: ('FFT-based SNR estimator', 'blk', [('fftsize', '512')], [('0', 'float',
-      512)], [('0', 'float', 1)], 'Embedded Python Block example - a simple multiply
-      const', ['fftsize'])
+    _io_cache: ('FFT-based SNR estimator', 'blk', [('fftsize', '512'), ('srate', '2500')],
+      [('0', 'float', 512)], [('0', 'float', 1)], 'Embedded Python Block example -
+      a simple multiply const', ['fftsize', 'srate'])
     bus_sink: false
     bus_source: false
     bus_structure: null
@@ -1357,19 +1371,32 @@ blocks:
       \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
       from gnuradio import gr\n\n\nclass blk(gr.sync_block):  # other base classes\
       \ are basic_block, decim_block, interp_block\n    \"\"\"Embedded Python Block\
-      \ example - a simple multiply const\"\"\"\n\n    def __init__(self, fftsize=512):\
+      \ example - a simple multiply const\"\"\"\n\n    def __init__(self, fftsize=512,srate=2500):\
       \  # only default arguments here\n        \"\"\"arguments to this function show\
       \ up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n         \
       \   self,\n            name='FFT-based SNR estimator',   # will show up in GRC\n\
       \            in_sig=[(np.float32,fftsize)],\n            out_sig=[np.float32]\n\
       \        )\n        # if an attribute with the same name as a parameter is found,\n\
       \        # a callback is registered (properties work, too).\n        self.fftsize\
-      \ = fftsize\n\n    def work(self, input_items, output_items):\n        \"\"\"\
-      Extract SNR estimate\"\"\"\n        fs = self.fftsize\n        for x in range(len(output_items[0])):\n\
-      \            v = input_items[0][x]\n            mid = int(self.fftsize/2)\n\
-      \            signal = np.mean(v[mid-1:mid+1])\n            n1 = np.mean(v[mid-7:mid-4])\n\
-      \            n2  = np.mean(v[mid+4:mid+7])\n            na = (n1+n2)/2.0\n \
-      \           snr = signal/na\n            output_items[0][x] = snr\n        return\
+      \ = fftsize\n        self.srate = srate\n\n    def work(self, input_items, output_items):\n\
+      \        \"\"\"Extract SNR estimate\"\"\"\n        fs = self.fftsize\n     \
+      \   #\n        # Determine bin size in Hz\n        #\n        binsize = self.srate\
+      \ / self.fftsize\n        \n        #\n        # Determine which offset-from-middle\
+      \ is 100Hz\n        # WWV has a 100Hz spectral artifact from the\n        #\
+      \ 100Hz sub-carrer\n        #\n        hhz = int(100.0/binsize)\n        for\
+      \ x in range(len(output_items[0])):\n            v = input_items[0][x]\n   \
+      \         mid = int(self.fftsize/2)\n            #\n            # Centre frequency\n\
+      \            #\n            signal = np.mean(v[mid-1:mid+1])\n            \n\
+      \            #\n            # Noise components\n            #\n            n1\
+      \ = np.mean(v[mid-7:mid-4])\n            n2  = np.mean(v[mid+4:mid+7])\n   \
+      \         na = (n1+n2)/2.0\n            \n            #\n            # 100Hz\
+      \ sub-carrer\n            #\n            hh = v[mid+hhz:mid+hhz+1]\n       \
+      \     hh += v[mid-hhz-1:mid-hhz]\n            hh /= 2.0\n\n            #\n \
+      \           # SNR estimate\n            #\n            snr = signal/na\n   \
+      \         \n            #\n            # If carrier to 100Hz ratio isn't within\
+      \ \"expected bounds\"\n            #\n            # Make SNR \"invalid\"\n \
+      \           #\n            if ((signal/hh > 1500.0) or (signal/hh < 10.0)):\n\
+      \                snr = 1.0\n            output_items[0][x] = snr\n        return\
       \ len(output_items[0])\n"
     affinity: ''
     alias: ''
@@ -1377,14 +1404,15 @@ blocks:
     fftsize: '512'
     maxoutbuf: '0'
     minoutbuf: '0'
+    srate: mid_rate
   states:
-    _io_cache: ('FFT-based SNR estimator', 'blk', [('fftsize', '512')], [('0', 'float',
-      512)], [('0', 'float', 1)], 'Embedded Python Block example - a simple multiply
-      const', ['fftsize'])
+    _io_cache: ('FFT-based SNR estimator', 'blk', [('fftsize', '512'), ('srate', '2500')],
+      [('0', 'float', 512)], [('0', 'float', 1)], 'Embedded Python Block example -
+      a simple multiply const', ['fftsize', 'srate'])
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1264, 1436.0]
+    coordinate: [1264, 1452.0]
     rotation: 0
     state: true
 - name: snr_probe1
