@@ -1339,9 +1339,9 @@ blocks:
       \         na = (n1+n2)/2.0\n            \n            #\n            # 100Hz\
       \ sub-carrer\n            #\n            hh = v[mid+hhz]\n            hh +=\
       \ v[mid-hhz]\n            hh /= 2.0\n\n            #\n            # SNR estimate--gated\
-      \ by 100Hz ratio\n            #\n            if ((hh / na) > 10.0):\n      \
-      \          snr = signal/na\n            else:\n                snr = 1.0\n\n\
-      \            output_items[0][x] = snr\n        return len(output_items[0])\n"
+      \ by 100Hz SNR\n            #\n            if ((hh / na) >= 5.0):\n        \
+      \        snr = signal/na\n            else:\n                snr = 1.0\n\n \
+      \           output_items[0][x] = snr\n        return len(output_items[0])\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -1389,9 +1389,9 @@ blocks:
       \         na = (n1+n2)/2.0\n            \n            #\n            # 100Hz\
       \ sub-carrer\n            #\n            hh = v[mid+hhz]\n            hh +=\
       \ v[mid-hhz]\n            hh /= 2.0\n\n            #\n            # SNR estimate--gated\
-      \ by 100Hz ratio\n            #\n            if ((hh / na) > 10.0):\n      \
-      \          snr = signal/na\n            else:\n                snr = 1.0\n\n\
-      \            output_items[0][x] = snr\n        return len(output_items[0])\n"
+      \ by 100Hz SNR\n            #\n            if ((hh / na) >= 5.0):\n        \
+      \        snr = signal/na\n            else:\n                snr = 1.0\n\n \
+      \           output_items[0][x] = snr\n        return len(output_items[0])\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -1406,7 +1406,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1256, 1420.0]
+    coordinate: [1280, 1436.0]
     rotation: 0
     state: true
 - name: snr_probe1
