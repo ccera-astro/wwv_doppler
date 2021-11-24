@@ -53,7 +53,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [880, 516.0]
+    coordinate: [1040, 532.0]
     rotation: 0
     state: true
 - name: first_len
@@ -65,7 +65,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1680, 540.0]
+    coordinate: [1648, 412.0]
     rotation: 0
     state: true
 - name: first_taps
@@ -82,7 +82,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1640, 364.0]
+    coordinate: [1408, 228.0]
     rotation: 0
     state: true
 - name: high_rate
@@ -154,7 +154,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1880, 548.0]
+    coordinate: [1736, 404.0]
     rotation: 0
     state: true
 - name: second_taps
@@ -171,7 +171,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1864, 364.0]
+    coordinate: [1600, 220.0]
     rotation: 0
     state: true
 - name: snr_fft_size
@@ -199,7 +199,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1520, 1148.0]
+    coordinate: [1736, 1132.0]
     rotation: 0
     state: true
 - name: snr_out2
@@ -215,7 +215,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1512, 1356.0]
+    coordinate: [1744, 1388.0]
     rotation: 0
     state: true
 - name: third_len
@@ -227,7 +227,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2064, 548.0]
+    coordinate: [1848, 404.0]
     rotation: 0
     state: true
 - name: third_taps
@@ -244,7 +244,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2056, 364.0]
+    coordinate: [1776, 228.0]
     rotation: 0
     state: true
 - name: tp_out1
@@ -260,7 +260,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1672, 1148.0]
+    coordinate: [1888, 1132.0]
     rotation: 0
     state: true
 - name: tp_out2
@@ -276,7 +276,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1664, 1348.0]
+    coordinate: [1912, 1380.0]
     rotation: 0
     state: true
 - name: uf1
@@ -423,6 +423,165 @@ blocks:
     coordinate: [680, 988.0]
     rotation: 0
     state: true
+- name: analog_sig_source_x_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '0.001'
+    comment: ''
+    freq: '100'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    samp_rate: mid_rate
+    type: complex
+    waveform: analog.GR_COS_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1744, 492.0]
+    rotation: 0
+    state: true
+- name: analog_sig_source_x_0_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '0.001'
+    comment: ''
+    freq: '-100'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    samp_rate: mid_rate
+    type: complex
+    waveform: analog.GR_COS_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1744, 652.0]
+    rotation: 0
+    state: true
+- name: analog_sig_source_x_0_0_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '0.001'
+    comment: ''
+    freq: '500'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    samp_rate: mid_rate
+    type: complex
+    waveform: analog.GR_COS_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1736, 804.0]
+    rotation: 0
+    state: true
+- name: analog_sig_source_x_0_0_0_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '0.001'
+    comment: ''
+    freq: '-500'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    samp_rate: mid_rate
+    type: complex
+    waveform: analog.GR_COS_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1728, 964.0]
+    rotation: 0
+    state: true
+- name: bist
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: BIST on/off
+    short_id: ''
+    type: eng_float
+    value: '0.0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [824, 492.0]
+    rotation: 0
+    state: true
+- name: blocks_add_xx_0
+  id: blocks_add_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [208, 1272.0]
+    rotation: 0
+    state: true
+- name: blocks_add_xx_0_0
+  id: blocks_add_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [216, 1496.0]
+    rotation: 0
+    state: true
+- name: blocks_add_xx_1
+  id: blocks_add_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '4'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2160, 768.0]
+    rotation: 0
+    state: true
 - name: blocks_complex_to_mag_squared_0
   id: blocks_complex_to_mag_squared
   parameters:
@@ -468,7 +627,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [680, 1236.0]
+    coordinate: [960, 1268.0]
     rotation: 0
     state: true
 - name: blocks_complex_to_mag_squared_1_0
@@ -484,8 +643,26 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [672, 1460.0]
+    coordinate: [984, 1508.0]
     rotation: 0
+    state: true
+- name: blocks_multiply_const_vxx_0
+  id: blocks_multiply_const_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    const: bist
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2292.0, 928]
+    rotation: 270
     state: true
 - name: blocks_stream_to_vector_0
   id: blocks_stream_to_vector
@@ -502,7 +679,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [192, 1244.0]
+    coordinate: [424, 1276.0]
     rotation: 0
     state: true
 - name: blocks_stream_to_vector_0_0
@@ -520,7 +697,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [184, 1444.0]
+    coordinate: [440, 1532.0]
     rotation: 0
     state: true
 - name: device
@@ -672,7 +849,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [416, 1204.0]
+    coordinate: [664, 1244.0]
     rotation: 0
     state: true
 - name: fft_vxx_0_0
@@ -693,7 +870,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [408, 1428.0]
+    coordinate: [664, 1484.0]
     rotation: 0
     state: true
 - name: freq_xlating_fft_filter_ccc_0
@@ -840,6 +1017,23 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [1328, 620.0]
+    rotation: 0
+    state: true
+- name: note_3
+  id: note
+  parameters:
+    alias: ''
+    comment: 'CRUDE
+
+      Built-In Self-Test (BIST)
+
+      for tone detector'
+    note: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1992, 500.0]
     rotation: 0
     state: true
 - name: osmosdr_source_0
@@ -1320,7 +1514,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1024, 1236.0]
+    coordinate: [1240, 1252.0]
     rotation: 0
     state: true
 - name: single_pole_iir_filter_xx_1_0
@@ -1338,7 +1532,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1024, 1452.0]
+    coordinate: [1224, 1468.0]
     rotation: 0
     state: true
 - name: snr_estimator_1
@@ -1410,7 +1604,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1264, 1244.0]
+    coordinate: [1488, 1252.0]
     rotation: 0
     state: true
 - name: snr_estimator_1_0
@@ -1482,7 +1676,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1256, 1468.0]
+    coordinate: [1480, 1468.0]
     rotation: 0
     state: true
 - name: snr_probe1
@@ -1496,7 +1690,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1520, 1252.0]
+    coordinate: [1744, 1244.0]
     rotation: 0
     state: true
 - name: snr_probe2
@@ -1510,7 +1704,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1520, 1460.0]
+    coordinate: [1744, 1500.0]
     rotation: 0
     state: true
 - name: tp_probe1
@@ -1524,7 +1718,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1528, 1308.0]
+    coordinate: [1744, 1300.0]
     rotation: 0
     state: true
 - name: tp_probe2
@@ -1538,7 +1732,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1520, 1524.0]
+    coordinate: [1744, 1556.0]
     rotation: 0
     state: true
 - name: upvf
@@ -1584,6 +1778,19 @@ blocks:
     coordinate: [1144, 388.0]
     rotation: 0
     state: true
+- name: virtual_sink_1
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: bist_sig
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2268.0, 1184]
+    rotation: 270
+    state: true
 - name: virtual_source_0
   id: virtual_source
   parameters:
@@ -1620,7 +1827,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [16, 1236.0]
+    coordinate: [0, 1236.0]
     rotation: 0
     state: true
 - name: virtual_source_0_1_0
@@ -1633,7 +1840,20 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [-16, 1428.0]
+    coordinate: [0, 1516.0]
+    rotation: 0
+    state: true
+- name: virtual_source_1
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: bist_sig
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [16, 1372.0]
     rotation: 0
     state: true
 - name: wwv_doplog_1
@@ -1761,7 +1981,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1760, 660.0]
+    coordinate: [1416, 132.0]
     rotation: 0
     state: true
 - name: zoom
@@ -1789,10 +2009,18 @@ connections:
 - [analog_pll_refout_cc_0_0, '0', analog_quadrature_demod_cf_0_0, '0']
 - [analog_quadrature_demod_cf_0, '0', single_pole_iir_filter_xx_0, '0']
 - [analog_quadrature_demod_cf_0_0, '0', single_pole_iir_filter_xx_0_0, '0']
+- [analog_sig_source_x_0, '0', blocks_add_xx_1, '0']
+- [analog_sig_source_x_0_0, '0', blocks_add_xx_1, '1']
+- [analog_sig_source_x_0_0_0, '0', blocks_add_xx_1, '2']
+- [analog_sig_source_x_0_0_0_0, '0', blocks_add_xx_1, '3']
+- [blocks_add_xx_0, '0', blocks_stream_to_vector_0, '0']
+- [blocks_add_xx_0_0, '0', blocks_stream_to_vector_0_0, '0']
+- [blocks_add_xx_1, '0', blocks_multiply_const_vxx_0, '0']
 - [blocks_complex_to_mag_squared_0, '0', single_pole_iir_filter_xx_0_1, '0']
 - [blocks_complex_to_mag_squared_0_0, '0', single_pole_iir_filter_xx_0_1_0, '0']
 - [blocks_complex_to_mag_squared_1, '0', single_pole_iir_filter_xx_1, '0']
 - [blocks_complex_to_mag_squared_1_0, '0', single_pole_iir_filter_xx_1_0, '0']
+- [blocks_multiply_const_vxx_0, '0', virtual_sink_1, '0']
 - [blocks_stream_to_vector_0, '0', fft_vxx_0, '0']
 - [blocks_stream_to_vector_0_0, '0', fft_vxx_0_0, '0']
 - [fft_filter_xxx_0, '0', fft_filter_xxx_0_0, '0']
@@ -1819,8 +2047,10 @@ connections:
 - [virtual_source_0, '0', blocks_complex_to_mag_squared_0, '0']
 - [virtual_source_0_0, '0', analog_agc_xx_0_0, '0']
 - [virtual_source_0_0, '0', blocks_complex_to_mag_squared_0_0, '0']
-- [virtual_source_0_1, '0', blocks_stream_to_vector_0, '0']
-- [virtual_source_0_1_0, '0', blocks_stream_to_vector_0_0, '0']
+- [virtual_source_0_1, '0', blocks_add_xx_0, '0']
+- [virtual_source_0_1_0, '0', blocks_add_xx_0_0, '1']
+- [virtual_source_1, '0', blocks_add_xx_0, '1']
+- [virtual_source_1, '0', blocks_add_xx_0_0, '0']
 
 metadata:
   file_format: 1
