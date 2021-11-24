@@ -235,10 +235,10 @@ blocks:
   parameters:
     beta: '6.76'
     comment: The taps for the filter above
-    cutoff_freq: '350'
+    cutoff_freq: '300'
     gain: '1.0'
     samp_rate: mid_rate
-    width: '25'
+    width: '30'
     win: firdes.WIN_HAMMING
   states:
     bus_sink: false
