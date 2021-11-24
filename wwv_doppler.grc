@@ -1556,20 +1556,21 @@ blocks:
       \ up in GRC\n            in_sig=[(np.float32,fftsize)],\n            out_sig=[np.float32,np.float32]\n\
       \        )\n        # if an attribute with the same name as a parameter is found,\n\
       \        # a callback is registered (properties work, too).\n        self.fftsize\
-      \ = fftsize\n        self.srate = srate\n\n    def work(self, input_items, output_items):\n\
-      \        \"\"\"Extract SNR estimate\"\"\"\n        fs = self.fftsize\n     \
-      \   #\n        # Determine bin size in Hz\n        #\n        binsize = float(self.srate)\
-      \ / float(self.fftsize)\n        \n        #\n        # Determine which offset-from-middle\
-      \ is 100Hz\n        # WWV has a 100Hz spectral artifact from the\n        #\
-      \ 100Hz sub-carrer\n        #\n        hhz = int(100.0/binsize)\n        \n\
-      \        #\n        # Determine offset of 500Hz tone\n        #\n        fhhz\
-      \ = int(500.0/binsize)\n        \n        #\n        # Determine offset of 600Hz\
-      \ tone\n        #\n        shhz = int(600.0/binsize)\n        \n        for\
-      \ x in range(len(output_items[0])):\n            v = input_items[0][x]\n   \
-      \         mid = int(self.fftsize/2)\n            #\n            # Centre frequency\n\
-      \            #\n            signal = self.tone_pwr(0.0,v,self.srate)\n     \
-      \       \n            #\n            # Noise components\n            #\n   \
-      \         n1 = self.tone_pwr(25.0,v,self.srate)\n            n2  = self.tone_pwr(-25.0,v,self.srate)\n\
+      \ = fftsize\n        self.srate = srate\n        self.tpcount = 0\n\n    def\
+      \ work(self, input_items, output_items):\n        \"\"\"Extract SNR estimate\"\
+      \"\"\n        fs = self.fftsize\n        pace = float(self.srate) / float(self.fftsize)\n\
+      \        #\n        # Determine bin size in Hz\n        #\n        binsize =\
+      \ float(self.srate) / float(self.fftsize)\n        \n        #\n        # Determine\
+      \ which offset-from-middle is 100Hz\n        # WWV has a 100Hz spectral artifact\
+      \ from the\n        # 100Hz sub-carrer\n        #\n        hhz = int(100.0/binsize)\n\
+      \        \n        #\n        # Determine offset of 500Hz tone\n        #\n\
+      \        fhhz = int(500.0/binsize)\n        \n        #\n        # Determine\
+      \ offset of 600Hz tone\n        #\n        shhz = int(600.0/binsize)\n     \
+      \   \n        for x in range(len(output_items[0])):\n            v = input_items[0][x]\n\
+      \            mid = int(self.fftsize/2)\n            #\n            # Centre\
+      \ frequency\n            #\n            signal = self.tone_pwr(0.0,v,self.srate)\n\
+      \            \n            #\n            # Noise components\n            #\n\
+      \            n1 = self.tone_pwr(25.0,v,self.srate)\n            n2  = self.tone_pwr(-25.0,v,self.srate)\n\
       \            na = (n1+n2)/2.0\n            \n            #\n            # 100Hz\
       \ sub-carrer\n            #\n            hh = self.tone_pwr(100.0,v,self.srate)\n\
       \            hh += self.tone_pwr(-100.0,v,self.srate)\n            hh /= 2.0\n\
@@ -1587,9 +1588,10 @@ blocks:
       \           # Tones-present flag\n            #\n            # If the loudest\
       \ tone is at least 5 times the boise AND\n            #   the 100Hz tone is\
       \ also at least 5 times the noise\n            #\n            #\n          \
-      \  if (stone/na > 5.0 and hh/na > 5.0):\n                tp = 1.0\n        \
-      \    else:\n                tp = 0.0\n\n            output_items[0][x] = snr\n\
-      \            output_items[1][x] = tp\n        return len(output_items[0])\n"
+      \  if (stone/na > 5.0 and hh/na > 5.0):\n                self.tpcount = int(pace*15)\n\
+      \            else:\n                self.tpcount -= 1\n\n            output_items[0][x]\
+      \ = snr\n            output_items[1][x] = 1 if self.tpcount > 0 else 0\n   \
+      \     return len(output_items[0])\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -1628,20 +1630,21 @@ blocks:
       \ up in GRC\n            in_sig=[(np.float32,fftsize)],\n            out_sig=[np.float32,np.float32]\n\
       \        )\n        # if an attribute with the same name as a parameter is found,\n\
       \        # a callback is registered (properties work, too).\n        self.fftsize\
-      \ = fftsize\n        self.srate = srate\n\n    def work(self, input_items, output_items):\n\
-      \        \"\"\"Extract SNR estimate\"\"\"\n        fs = self.fftsize\n     \
-      \   #\n        # Determine bin size in Hz\n        #\n        binsize = float(self.srate)\
-      \ / float(self.fftsize)\n        \n        #\n        # Determine which offset-from-middle\
-      \ is 100Hz\n        # WWV has a 100Hz spectral artifact from the\n        #\
-      \ 100Hz sub-carrer\n        #\n        hhz = int(100.0/binsize)\n        \n\
-      \        #\n        # Determine offset of 500Hz tone\n        #\n        fhhz\
-      \ = int(500.0/binsize)\n        \n        #\n        # Determine offset of 600Hz\
-      \ tone\n        #\n        shhz = int(600.0/binsize)\n        \n        for\
-      \ x in range(len(output_items[0])):\n            v = input_items[0][x]\n   \
-      \         mid = int(self.fftsize/2)\n            #\n            # Centre frequency\n\
-      \            #\n            signal = self.tone_pwr(0.0,v,self.srate)\n     \
-      \       \n            #\n            # Noise components\n            #\n   \
-      \         n1 = self.tone_pwr(25.0,v,self.srate)\n            n2  = self.tone_pwr(-25.0,v,self.srate)\n\
+      \ = fftsize\n        self.srate = srate\n        self.tpcount = 0\n\n    def\
+      \ work(self, input_items, output_items):\n        \"\"\"Extract SNR estimate\"\
+      \"\"\n        fs = self.fftsize\n        pace = float(self.srate) / float(self.fftsize)\n\
+      \        #\n        # Determine bin size in Hz\n        #\n        binsize =\
+      \ float(self.srate) / float(self.fftsize)\n        \n        #\n        # Determine\
+      \ which offset-from-middle is 100Hz\n        # WWV has a 100Hz spectral artifact\
+      \ from the\n        # 100Hz sub-carrer\n        #\n        hhz = int(100.0/binsize)\n\
+      \        \n        #\n        # Determine offset of 500Hz tone\n        #\n\
+      \        fhhz = int(500.0/binsize)\n        \n        #\n        # Determine\
+      \ offset of 600Hz tone\n        #\n        shhz = int(600.0/binsize)\n     \
+      \   \n        for x in range(len(output_items[0])):\n            v = input_items[0][x]\n\
+      \            mid = int(self.fftsize/2)\n            #\n            # Centre\
+      \ frequency\n            #\n            signal = self.tone_pwr(0.0,v,self.srate)\n\
+      \            \n            #\n            # Noise components\n            #\n\
+      \            n1 = self.tone_pwr(25.0,v,self.srate)\n            n2  = self.tone_pwr(-25.0,v,self.srate)\n\
       \            na = (n1+n2)/2.0\n            \n            #\n            # 100Hz\
       \ sub-carrer\n            #\n            hh = self.tone_pwr(100.0,v,self.srate)\n\
       \            hh += self.tone_pwr(-100.0,v,self.srate)\n            hh /= 2.0\n\
@@ -1659,9 +1662,10 @@ blocks:
       \           # Tones-present flag\n            #\n            # If the loudest\
       \ tone is at least 5 times the boise AND\n            #   the 100Hz tone is\
       \ also at least 5 times the noise\n            #\n            #\n          \
-      \  if (stone/na > 5.0 and hh/na > 5.0):\n                tp = 1.0\n        \
-      \    else:\n                tp = 0.0\n\n            output_items[0][x] = snr\n\
-      \            output_items[1][x] = tp\n        return len(output_items[0])\n"
+      \  if (stone/na > 5.0 and hh/na > 5.0):\n                self.tpcount = int(pace*15)\n\
+      \            else:\n                self.tpcount -= 1\n\n            output_items[0][x]\
+      \ = snr\n            output_items[1][x] = 1 if self.tpcount > 0 else 0\n   \
+      \     return len(output_items[0])\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -1676,7 +1680,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1480, 1468.0]
+    coordinate: [1488, 1508.0]
     rotation: 0
     state: true
 - name: snr_probe1
