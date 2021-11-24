@@ -235,10 +235,10 @@ blocks:
   parameters:
     beta: '6.76'
     comment: The taps for the filter above
-    cutoff_freq: '300'
+    cutoff_freq: '725'
     gain: '1.0'
     samp_rate: mid_rate
-    width: '30'
+    width: '35'
     win: firdes.WIN_HAMMING
   states:
     bus_sink: false
@@ -1388,12 +1388,14 @@ blocks:
       \        s440 = self.tone_pwr(440.0,v,self.srate)\n            s440 += self.tone_pwr(-440.0,v,self.srate)\n\
       \            s440 /= 2.0\n            \n            #\n            # Pick loudest\
       \ tone from 440,500,600\n            #\n            stone = max([s500,s600,s440])\n\
-      \            \n\n            #\n            # SNR estimate\n            #\n\
-      \            snr = signal/na\n            \n            #\n            # Tones-present\
-      \ flag\n            #\n            if (stone/na > 5.0 and hh/na > 5.0):\n  \
-      \              tp = 1.0\n            else:\n                tp = 0.0\n\n   \
-      \         output_items[0][x] = snr\n            output_items[1][x] = tp\n  \
-      \      return len(output_items[0])\n"
+      \            \n\n            #\n            # Carrier/Noise (SNR-ish) estimate\n\
+      \            #\n            snr = signal/na\n            \n            #\n \
+      \           # Tones-present flag\n            #\n            # If the loudest\
+      \ tone is at least 5 times the boise AND\n            #   the 100Hz tone is\
+      \ also at least 5 times the noise\n            #\n            #\n          \
+      \  if (stone/na > 5.0 and hh/na > 5.0):\n                tp = 1.0\n        \
+      \    else:\n                tp = 0.0\n\n            output_items[0][x] = snr\n\
+      \            output_items[1][x] = tp\n        return len(output_items[0])\n"
     affinity: ''
     alias: ''
     comment: ''
