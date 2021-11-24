@@ -1391,7 +1391,7 @@ blocks:
       \            snr = signal/na\n            \n            #\n            # Tones-present\
       \ flag\n            #\n            if (stone/na > 5.0 and hh/na > 5.0):\n  \
       \              tp = 1.0\n            else:\n                tp = 0.0\n\n   \
-      \         output_items[0][x] = snr\n            output_itmes[1][x] = tp\n  \
+      \         output_items[0][x] = snr\n            output_items[1][x] = tp\n  \
       \      return len(output_items[0])\n"
     affinity: ''
     alias: ''
@@ -1410,7 +1410,7 @@ blocks:
     coordinate: [1264, 1244.0]
     rotation: 0
     state: true
-- name: snr_estimator_1_0
+- name: snr_estimator_2
   id: epy_block
   parameters:
     _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
@@ -1460,7 +1460,7 @@ blocks:
       \            snr = signal/na\n            \n            #\n            # Tones-present\
       \ flag\n            #\n            if (stone/na > 5.0 and hh/na > 5.0):\n  \
       \              tp = 1.0\n            else:\n                tp = 0.0\n\n   \
-      \         output_items[0][x] = snr\n            output_itmes[1][x] = tp\n  \
+      \         output_items[0][x] = snr\n            output_items[1][x] = tp\n  \
       \      return len(output_items[0])\n"
     affinity: ''
     alias: ''
@@ -1476,7 +1476,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1272, 1452.0]
+    coordinate: [1248, 1452.0]
     rotation: 0
     state: true
 - name: snr_probe1
@@ -1804,11 +1804,11 @@ connections:
 - [single_pole_iir_filter_xx_0_1, '0', wwv_doplog_1, '1']
 - [single_pole_iir_filter_xx_0_1_0, '0', wwv_doplog_1_0, '1']
 - [single_pole_iir_filter_xx_1, '0', snr_estimator_1, '0']
-- [single_pole_iir_filter_xx_1_0, '0', snr_estimator_1_0, '0']
+- [single_pole_iir_filter_xx_1_0, '0', snr_estimator_2, '0']
 - [snr_estimator_1, '0', snr_probe1, '0']
 - [snr_estimator_1, '1', tp_probe1, '0']
-- [snr_estimator_1_0, '0', snr_probe2, '0']
-- [snr_estimator_1_0, '1', tp_probe2, '0']
+- [snr_estimator_2, '0', snr_probe2, '0']
+- [snr_estimator_2, '1', tp_probe2, '0']
 - [virtual_source_0, '0', analog_agc_xx_0, '0']
 - [virtual_source_0, '0', blocks_complex_to_mag_squared_0, '0']
 - [virtual_source_0_0, '0', analog_agc_xx_0_0, '0']
