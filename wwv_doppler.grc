@@ -247,7 +247,7 @@ blocks:
     coordinate: [2056, 364.0]
     rotation: 0
     state: true
-- name: tp_Out1
+- name: tp_out1
   id: variable_function_probe
   parameters:
     block_id: tp_probe1
