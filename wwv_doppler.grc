@@ -1352,13 +1352,14 @@ blocks:
       \ are basic_block, decim_block, interp_block\n    \"\"\"Embedded Python Block\
       \ example - a simple multiply const\"\"\"\n\n    def tone_pwr(self,tone,fft,srate):\n\
       \        mid = len(fft)/2\n        mid = int(mid)\n        bw = srate/len(fft)\n\
-      \        off = float(tone)/float(bw)\n        off = int(off)\n        \n   \
-      \     st = mid-(off+1)\n        end = st+2\n        pwr = np.mean(fft[st:end])\n\
-      \        return pwr\n\n    def __init__(self, fftsize=512,srate=2500):  # only\
-      \ default arguments here\n        \"\"\"arguments to this function show up as\
-      \ parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n            self,\n\
-      \            name='FFT-based SNR estimator',   # will show up in GRC\n     \
-      \       in_sig=[(np.float32,fftsize)],\n            out_sig=[np.float32,np.float32]\n\
+      \        off = float(abs(tone))/float(bw)\n        off = int(off)\n        \n\
+      \        if (tone >= 0):\n            st = mid+(off-1)\n            end = st+2\n\
+      \        else:\n            st = mid-(off+1)\n            end = st+2\n     \
+      \   \n        pwr = np.mean(fft[st:end])\n        return pwr\n\n    def __init__(self,\
+      \ fftsize=512,srate=2500):  # only default arguments here\n        \"\"\"arguments\
+      \ to this function show up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n\
+      \            self,\n            name='FFT-based SNR estimator',   # will show\
+      \ up in GRC\n            in_sig=[(np.float32,fftsize)],\n            out_sig=[np.float32,np.float32]\n\
       \        )\n        # if an attribute with the same name as a parameter is found,\n\
       \        # a callback is registered (properties work, too).\n        self.fftsize\
       \ = fftsize\n        self.srate = srate\n\n    def work(self, input_items, output_items):\n\
@@ -1374,7 +1375,7 @@ blocks:
       \         mid = int(self.fftsize/2)\n            #\n            # Centre frequency\n\
       \            #\n            signal = self.tone_pwr(0.0,v,self.srate)\n     \
       \       \n            #\n            # Noise components\n            #\n   \
-      \         n1 = self.tone_pwr(15.0,v,self.srate)\n            n2  = self.tone_pwr(-15.0,v,self.srate)\n\
+      \         n1 = self.tone_pwr(25.0,v,self.srate)\n            n2  = self.tone_pwr(-25.0,v,self.srate)\n\
       \            na = (n1+n2)/2.0\n            \n            #\n            # 100Hz\
       \ sub-carrer\n            #\n            hh = self.tone_pwr(100.0,v,self.srate)\n\
       \            hh += self.tone_pwr(-100.0,v,self.srate)\n            hh /= 2.0\n\
@@ -1410,7 +1411,7 @@ blocks:
     coordinate: [1264, 1244.0]
     rotation: 0
     state: true
-- name: snr_estimator_2
+- name: snr_estimator_1_0
   id: epy_block
   parameters:
     _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
@@ -1421,13 +1422,14 @@ blocks:
       \ are basic_block, decim_block, interp_block\n    \"\"\"Embedded Python Block\
       \ example - a simple multiply const\"\"\"\n\n    def tone_pwr(self,tone,fft,srate):\n\
       \        mid = len(fft)/2\n        mid = int(mid)\n        bw = srate/len(fft)\n\
-      \        off = float(tone)/float(bw)\n        off = int(off)\n        \n   \
-      \     st = mid-(off+1)\n        end = st+2\n        pwr = np.mean(fft[st:end])\n\
-      \        return pwr\n\n    def __init__(self, fftsize=512,srate=2500):  # only\
-      \ default arguments here\n        \"\"\"arguments to this function show up as\
-      \ parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n            self,\n\
-      \            name='FFT-based SNR estimator',   # will show up in GRC\n     \
-      \       in_sig=[(np.float32,fftsize)],\n            out_sig=[np.float32,np.float32]\n\
+      \        off = float(abs(tone))/float(bw)\n        off = int(off)\n        \n\
+      \        if (tone >= 0):\n            st = mid+(off-1)\n            end = st+2\n\
+      \        else:\n            st = mid-(off+1)\n            end = st+2\n     \
+      \   \n        pwr = np.mean(fft[st:end])\n        return pwr\n\n    def __init__(self,\
+      \ fftsize=512,srate=2500):  # only default arguments here\n        \"\"\"arguments\
+      \ to this function show up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n\
+      \            self,\n            name='FFT-based SNR estimator',   # will show\
+      \ up in GRC\n            in_sig=[(np.float32,fftsize)],\n            out_sig=[np.float32,np.float32]\n\
       \        )\n        # if an attribute with the same name as a parameter is found,\n\
       \        # a callback is registered (properties work, too).\n        self.fftsize\
       \ = fftsize\n        self.srate = srate\n\n    def work(self, input_items, output_items):\n\
@@ -1443,7 +1445,7 @@ blocks:
       \         mid = int(self.fftsize/2)\n            #\n            # Centre frequency\n\
       \            #\n            signal = self.tone_pwr(0.0,v,self.srate)\n     \
       \       \n            #\n            # Noise components\n            #\n   \
-      \         n1 = self.tone_pwr(15.0,v,self.srate)\n            n2  = self.tone_pwr(-15.0,v,self.srate)\n\
+      \         n1 = self.tone_pwr(25.0,v,self.srate)\n            n2  = self.tone_pwr(-25.0,v,self.srate)\n\
       \            na = (n1+n2)/2.0\n            \n            #\n            # 100Hz\
       \ sub-carrer\n            #\n            hh = self.tone_pwr(100.0,v,self.srate)\n\
       \            hh += self.tone_pwr(-100.0,v,self.srate)\n            hh /= 2.0\n\
@@ -1476,7 +1478,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1248, 1452.0]
+    coordinate: [1272, 1460.0]
     rotation: 0
     state: true
 - name: snr_probe1
@@ -1804,11 +1806,11 @@ connections:
 - [single_pole_iir_filter_xx_0_1, '0', wwv_doplog_1, '1']
 - [single_pole_iir_filter_xx_0_1_0, '0', wwv_doplog_1_0, '1']
 - [single_pole_iir_filter_xx_1, '0', snr_estimator_1, '0']
-- [single_pole_iir_filter_xx_1_0, '0', snr_estimator_2, '0']
+- [single_pole_iir_filter_xx_1_0, '0', snr_estimator_1_0, '0']
 - [snr_estimator_1, '0', snr_probe1, '0']
 - [snr_estimator_1, '1', tp_probe1, '0']
-- [snr_estimator_2, '0', snr_probe2, '0']
-- [snr_estimator_2, '1', tp_probe2, '0']
+- [snr_estimator_1_0, '0', snr_probe2, '0']
+- [snr_estimator_1_0, '1', tp_probe2, '0']
 - [virtual_source_0, '0', analog_agc_xx_0, '0']
 - [virtual_source_0, '0', blocks_complex_to_mag_squared_0, '0']
 - [virtual_source_0_0, '0', analog_agc_xx_0_0, '0']
