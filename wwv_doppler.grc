@@ -1353,8 +1353,8 @@ blocks:
       \ example - a simple multiply const\"\"\"\n\n    def tone_pwr(self,tone,fft,srate):\n\
       \        mid = len(fft)/2\n        mid = int(mid)\n        bw = srate/len(fft)\n\
       \        off = float(abs(tone))/float(bw)\n        off = int(off)\n        \n\
-      \        if (tone >= 0):\n            st = mid+(off-1)\n            end = st+2\n\
-      \        else:\n            st = mid-(off+1)\n            end = st+2\n     \
+      \        if (tone >= 0):\n            st = mid+(off-1)\n            end = st+3\n\
+      \        else:\n            st = mid-(off+1)\n            end = st+3\n     \
       \   \n        pwr = np.mean(fft[st:end])\n        return pwr\n\n    def __init__(self,\
       \ fftsize=512,srate=2500):  # only default arguments here\n        \"\"\"arguments\
       \ to this function show up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n\
@@ -1425,8 +1425,8 @@ blocks:
       \ example - a simple multiply const\"\"\"\n\n    def tone_pwr(self,tone,fft,srate):\n\
       \        mid = len(fft)/2\n        mid = int(mid)\n        bw = srate/len(fft)\n\
       \        off = float(abs(tone))/float(bw)\n        off = int(off)\n        \n\
-      \        if (tone >= 0):\n            st = mid+(off-1)\n            end = st+2\n\
-      \        else:\n            st = mid-(off+1)\n            end = st+2\n     \
+      \        if (tone >= 0):\n            st = mid+(off-1)\n            end = st+3\n\
+      \        else:\n            st = mid-(off+1)\n            end = st+3\n     \
       \   \n        pwr = np.mean(fft[st:end])\n        return pwr\n\n    def __init__(self,\
       \ fftsize=512,srate=2500):  # only default arguments here\n        \"\"\"arguments\
       \ to this function show up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n\
@@ -1460,12 +1460,14 @@ blocks:
       \        s440 = self.tone_pwr(440.0,v,self.srate)\n            s440 += self.tone_pwr(-440.0,v,self.srate)\n\
       \            s440 /= 2.0\n            \n            #\n            # Pick loudest\
       \ tone from 440,500,600\n            #\n            stone = max([s500,s600,s440])\n\
-      \            \n\n            #\n            # SNR estimate\n            #\n\
-      \            snr = signal/na\n            \n            #\n            # Tones-present\
-      \ flag\n            #\n            if (stone/na > 5.0 and hh/na > 5.0):\n  \
-      \              tp = 1.0\n            else:\n                tp = 0.0\n\n   \
-      \         output_items[0][x] = snr\n            output_items[1][x] = tp\n  \
-      \      return len(output_items[0])\n"
+      \            \n\n            #\n            # Carrier/Noise (SNR-ish) estimate\n\
+      \            #\n            snr = signal/na\n            \n            #\n \
+      \           # Tones-present flag\n            #\n            # If the loudest\
+      \ tone is at least 5 times the boise AND\n            #   the 100Hz tone is\
+      \ also at least 5 times the noise\n            #\n            #\n          \
+      \  if (stone/na > 5.0 and hh/na > 5.0):\n                tp = 1.0\n        \
+      \    else:\n                tp = 0.0\n\n            output_items[0][x] = snr\n\
+      \            output_items[1][x] = tp\n        return len(output_items[0])\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -1480,7 +1482,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1272, 1460.0]
+    coordinate: [1256, 1468.0]
     rotation: 0
     state: true
 - name: snr_probe1
