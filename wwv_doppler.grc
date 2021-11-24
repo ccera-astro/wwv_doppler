@@ -247,6 +247,38 @@ blocks:
     coordinate: [2056, 364.0]
     rotation: 0
     state: true
+- name: tp_Out1
+  id: variable_function_probe
+  parameters:
+    block_id: tp_probe1
+    comment: ''
+    function_args: ''
+    function_name: level
+    poll_rate: '5'
+    value: '0.0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1672, 1148.0]
+    rotation: 0
+    state: true
+- name: tp_out2
+  id: variable_function_probe
+  parameters:
+    block_id: tp_probe2
+    comment: ''
+    function_args: ''
+    function_name: level
+    poll_rate: '5'
+    value: '0.0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1664, 1348.0]
+    rotation: 0
+    state: true
 - name: uf1
   id: variable
   parameters:
@@ -1318,32 +1350,48 @@ blocks:
       \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
       from gnuradio import gr\n\n\nclass blk(gr.sync_block):  # other base classes\
       \ are basic_block, decim_block, interp_block\n    \"\"\"Embedded Python Block\
-      \ example - a simple multiply const\"\"\"\n\n    def __init__(self, fftsize=512,srate=2500):\
-      \  # only default arguments here\n        \"\"\"arguments to this function show\
-      \ up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n         \
-      \   self,\n            name='FFT-based SNR estimator',   # will show up in GRC\n\
-      \            in_sig=[(np.float32,fftsize)],\n            out_sig=[np.float32]\n\
+      \ example - a simple multiply const\"\"\"\n\n    def tone_pwr(tone,fft,srate):\n\
+      \        mid = len(fft)/2\n        mid = int(mid)\n        bw = srate/len(fft)\n\
+      \        off = float(tone)/float(bw)\n        off = int(off)\n        \n   \
+      \     st = mid-(off+1)\n        end = st+2\n        pwr = np.mean(fft[st:end])\n\
+      \        return pwr\n\n    def __init__(self, fftsize=512,srate=2500):  # only\
+      \ default arguments here\n        \"\"\"arguments to this function show up as\
+      \ parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n            self,\n\
+      \            name='FFT-based SNR estimator',   # will show up in GRC\n     \
+      \       in_sig=[(np.float32,fftsize)],\n            out_sig=[np.float32,np.float32]\n\
       \        )\n        # if an attribute with the same name as a parameter is found,\n\
       \        # a callback is registered (properties work, too).\n        self.fftsize\
       \ = fftsize\n        self.srate = srate\n\n    def work(self, input_items, output_items):\n\
       \        \"\"\"Extract SNR estimate\"\"\"\n        fs = self.fftsize\n     \
-      \   #\n        # Determine bin size in Hz\n        #\n        binsize = self.srate\
-      \ / self.fftsize\n        \n        #\n        # Determine which offset-from-middle\
+      \   #\n        # Determine bin size in Hz\n        #\n        binsize = float(self.srate)\
+      \ / float(self.fftsize)\n        \n        #\n        # Determine which offset-from-middle\
       \ is 100Hz\n        # WWV has a 100Hz spectral artifact from the\n        #\
-      \ 100Hz sub-carrer\n        #\n        hhz = int(100.0/binsize)\n        for\
+      \ 100Hz sub-carrer\n        #\n        hhz = int(100.0/binsize)\n        \n\
+      \        #\n        # Determine offset of 500Hz tone\n        #\n        fhhz\
+      \ = int(500.0/binsize)\n        \n        #\n        # Determine offset of 600Hz\
+      \ tone\n        #\n        shhz = int(600.0/binsize)\n        \n        for\
       \ x in range(len(output_items[0])):\n            v = input_items[0][x]\n   \
       \         mid = int(self.fftsize/2)\n            #\n            # Centre frequency\n\
-      \            #\n            signal = np.mean(v[mid-1:mid+1])\n            \n\
-      \            #\n            # Noise components\n            #\n            n1\
-      \ = np.mean(v[mid-7:mid-4])\n            n2  = np.mean(v[mid+4:mid+7])\n   \
-      \         na = (n1+n2)/2.0\n            \n            #\n            # 100Hz\
-      \ sub-carrer\n            #\n            hh = np.mean(v[mid+(hhz-1):mid+hhz+1])\n\
-      \            hh += np.mean(v[mid-(hhz+1):mid-(hhz-1)])\n            hh /= 2.0\n\
-      \n            #\n            # SNR estimate\n            #\n            snr\
-      \ = signal/na\n            #\n            # SNR estimate is gated by 100Hz SNR\n\
-      \            #\n            if ((hh / na) >= 5.0 and snr >= 10):\n         \
-      \       snr = signal/na\n            else:\n                snr = 1.0\n\n  \
-      \          output_items[0][x] = snr\n        return len(output_items[0])\n"
+      \            #\n            signal = tone_pwr(0.0,v,self.srate)\n          \
+      \  \n            #\n            # Noise components\n            #\n        \
+      \    n1 = tone_pwr(15.0,v,self.srate)\n            n2  = tone_pwr(-15.0,v,selfsrate)\n\
+      \            na = (n1+n2)/2.0\n            \n            #\n            # 100Hz\
+      \ sub-carrer\n            #\n            hh = tone_pwr(100.0,v,self.srate)\n\
+      \            hh += tone_pwr(-100.0,v,self.srate)\n            hh /= 2.0\n  \
+      \          \n            #\n            # 500Hz tone\n            #\n      \
+      \      s500 = tone_pwr(500.0,v,self.srate)\n            s500 += tone_pwr(-500.0,v,self.srate)\n\
+      \            s500 /= 2.0\n            \n            #\n            # 600Hz tone\n\
+      \            #\n            s600 = tone_pwr(600.0,v,self.srate)\n          \
+      \  s600 += tone_pwr(-600.0,v,self.srate)\n            s600 /= 2.0\n        \
+      \    \n            #\n            # 440Hz tone\n            #\n            s440\
+      \ = tone_pwr(400.0,v,self.srate)\n            s440 += tone_pwr(-400.0,v,self.srate)\n\
+      \            s440 /= 2.0\n            \n            #\n            # Pick loudest\
+      \ tone\n            #\n            stone = max([s500,s600,s440])\n         \
+      \   \n\n            #\n            # SNR estimate\n            #\n         \
+      \   snr = signal/na\n            \n            \n            if (stone/na >\
+      \ 5.0):\n                tp = 1.0\n            else:\n                tp = 0.0\n\
+      \n            output_items[0][x] = snr\n            output_itmes[1][x] = tp\n\
+      \        return len(output_items[0])\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -1353,8 +1401,8 @@ blocks:
     srate: mid_rate
   states:
     _io_cache: ('FFT-based SNR estimator', 'blk', [('fftsize', '512'), ('srate', '2500')],
-      [('0', 'float', 512)], [('0', 'float', 1)], 'Embedded Python Block example -
-      a simple multiply const', ['fftsize', 'srate'])
+      [('0', 'float', 512)], [('0', 'float', 1), ('1', 'float', 1)], 'Embedded Python
+      Block example - a simple multiply const', ['fftsize', 'srate'])
     bus_sink: false
     bus_source: false
     bus_structure: null
@@ -1370,32 +1418,48 @@ blocks:
       \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
       from gnuradio import gr\n\n\nclass blk(gr.sync_block):  # other base classes\
       \ are basic_block, decim_block, interp_block\n    \"\"\"Embedded Python Block\
-      \ example - a simple multiply const\"\"\"\n\n    def __init__(self, fftsize=512,srate=2500):\
-      \  # only default arguments here\n        \"\"\"arguments to this function show\
-      \ up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n         \
-      \   self,\n            name='FFT-based SNR estimator',   # will show up in GRC\n\
-      \            in_sig=[(np.float32,fftsize)],\n            out_sig=[np.float32]\n\
+      \ example - a simple multiply const\"\"\"\n\n    def tone_pwr(tone,fft,srate):\n\
+      \        mid = len(fft)/2\n        mid = int(mid)\n        bw = srate/len(fft)\n\
+      \        off = float(tone)/float(bw)\n        off = int(off)\n        \n   \
+      \     st = mid-(off+1)\n        end = st+2\n        pwr = np.mean(fft[st:end])\n\
+      \        return pwr\n\n    def __init__(self, fftsize=512,srate=2500):  # only\
+      \ default arguments here\n        \"\"\"arguments to this function show up as\
+      \ parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n            self,\n\
+      \            name='FFT-based SNR estimator',   # will show up in GRC\n     \
+      \       in_sig=[(np.float32,fftsize)],\n            out_sig=[np.float32,np.float32]\n\
       \        )\n        # if an attribute with the same name as a parameter is found,\n\
       \        # a callback is registered (properties work, too).\n        self.fftsize\
       \ = fftsize\n        self.srate = srate\n\n    def work(self, input_items, output_items):\n\
       \        \"\"\"Extract SNR estimate\"\"\"\n        fs = self.fftsize\n     \
-      \   #\n        # Determine bin size in Hz\n        #\n        binsize = self.srate\
-      \ / self.fftsize\n        \n        #\n        # Determine which offset-from-middle\
+      \   #\n        # Determine bin size in Hz\n        #\n        binsize = float(self.srate)\
+      \ / float(self.fftsize)\n        \n        #\n        # Determine which offset-from-middle\
       \ is 100Hz\n        # WWV has a 100Hz spectral artifact from the\n        #\
-      \ 100Hz sub-carrer\n        #\n        hhz = int(100.0/binsize)\n        for\
+      \ 100Hz sub-carrer\n        #\n        hhz = int(100.0/binsize)\n        \n\
+      \        #\n        # Determine offset of 500Hz tone\n        #\n        fhhz\
+      \ = int(500.0/binsize)\n        \n        #\n        # Determine offset of 600Hz\
+      \ tone\n        #\n        shhz = int(600.0/binsize)\n        \n        for\
       \ x in range(len(output_items[0])):\n            v = input_items[0][x]\n   \
       \         mid = int(self.fftsize/2)\n            #\n            # Centre frequency\n\
-      \            #\n            signal = np.mean(v[mid-1:mid+1])\n            \n\
-      \            #\n            # Noise components\n            #\n            n1\
-      \ = np.mean(v[mid-7:mid-4])\n            n2  = np.mean(v[mid+4:mid+7])\n   \
-      \         na = (n1+n2)/2.0\n            \n            #\n            # 100Hz\
-      \ sub-carrer\n            #\n            hh = np.mean(v[mid+(hhz-1):mid+hhz+1])\n\
-      \            hh += np.mean(v[mid-(hhz+1):mid-(hhz-1)])\n            hh /= 2.0\n\
-      \n            #\n            # SNR estimate\n            #\n            snr\
-      \ = signal/na\n            #\n            # SNR estimate is gated by 100Hz SNR\n\
-      \            #\n            if ((hh / na) >= 5.0 and snr >= 10):\n         \
-      \       snr = signal/na\n            else:\n                snr = 1.0\n\n  \
-      \          output_items[0][x] = snr\n        return len(output_items[0])\n"
+      \            #\n            signal = tone_pwr(0.0,v,self.srate)\n          \
+      \  \n            #\n            # Noise components\n            #\n        \
+      \    n1 = tone_pwr(15.0,v,self.srate)\n            n2  = tone_pwr(-15.0,v,selfsrate)\n\
+      \            na = (n1+n2)/2.0\n            \n            #\n            # 100Hz\
+      \ sub-carrer\n            #\n            hh = tone_pwr(100.0,v,self.srate)\n\
+      \            hh += tone_pwr(-100.0,v,self.srate)\n            hh /= 2.0\n  \
+      \          \n            #\n            # 500Hz tone\n            #\n      \
+      \      s500 = tone_pwr(500.0,v,self.srate)\n            s500 += tone_pwr(-500.0,v,self.srate)\n\
+      \            s500 /= 2.0\n            \n            #\n            # 600Hz tone\n\
+      \            #\n            s600 = tone_pwr(600.0,v,self.srate)\n          \
+      \  s600 += tone_pwr(-600.0,v,self.srate)\n            s600 /= 2.0\n        \
+      \    \n            #\n            # 440Hz tone\n            #\n            s440\
+      \ = tone_pwr(400.0,v,self.srate)\n            s440 += tone_pwr(-400.0,v,self.srate)\n\
+      \            s440 /= 2.0\n            \n            #\n            # Pick loudest\
+      \ tone\n            #\n            stone = max([s500,s600,s440])\n         \
+      \   \n\n            #\n            # SNR estimate\n            #\n         \
+      \   snr = signal/na\n            \n            \n            if (stone/na >\
+      \ 5.0):\n                tp = 1.0\n            else:\n                tp = 0.0\n\
+      \n            output_items[0][x] = snr\n            output_itmes[1][x] = tp\n\
+      \        return len(output_items[0])\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -1405,12 +1469,12 @@ blocks:
     srate: mid_rate
   states:
     _io_cache: ('FFT-based SNR estimator', 'blk', [('fftsize', '512'), ('srate', '2500')],
-      [('0', 'float', 512)], [('0', 'float', 1)], 'Embedded Python Block example -
-      a simple multiply const', ['fftsize', 'srate'])
+      [('0', 'float', 512)], [('0', 'float', 1), ('1', 'float', 1)], 'Embedded Python
+      Block example - a simple multiply const', ['fftsize', 'srate'])
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1280, 1428.0]
+    coordinate: [1256, 1396.0]
     rotation: 0
     state: true
 - name: snr_probe1
@@ -1439,6 +1503,34 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [1520, 1460.0]
+    rotation: 0
+    state: true
+- name: tp_probe1
+  id: blocks_probe_signal_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    type: float
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1528, 1308.0]
+    rotation: 0
+    state: true
+- name: tp_probe2
+  id: blocks_probe_signal_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    type: float
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1520, 1524.0]
     rotation: 0
     state: true
 - name: upvf
@@ -1546,8 +1638,8 @@ blocks:
       from gnuradio import gr\nimport time\n\n\nclass blk(gr.sync_block):  # other\
       \ base classes are basic_block, decim_block, interp_block\n    \"\"\"Doppler\
       \ Logger\"\"\"\n\n    def __init__(self, prefix=\"./\", lograte=10.0, srate=1000,\
-      \ snr=1.0):  # only default arguments here\n        \"\"\"arguments to this\
-      \ function show up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n\
+      \ snr=1.0,tp=0.0):  # only default arguments here\n        \"\"\"arguments to\
+      \ this function show up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n\
       \            self,\n            name='WWV Doppler Logger',   # will show up\
       \ in GRC\n            in_sig=[np.float32]*2,\n            out_sig=None\n   \
       \     )\n        # if an attribute with the same name as a parameter is found,\n\
@@ -1555,24 +1647,24 @@ blocks:
       \ = prefix\n        self.lograte = lograte\n        self.avg = 0.0\n       \
       \ self.pavg = 0.0\n        self.acnt = 0\n        self.now = time.time()\n \
       \       self.srate = srate\n        self.snr = 1.0\n        self.snravg = 1.0\n\
-      \        self.cursnr = 1.0\n        self.snrcnt = 0\n\n    def work(self, input_items,\
-      \ output_items):\n        \"\"\"Log frequency offsets\"\"\"\n        if (self.cursnr\
-      \ != self.snr):\n            self.cursnr = self.snr\n            self.snravg\
-      \ += self.snr\n            self.snrcnt += 1\n        for x in range(len(input_items[0])):\n\
-      \            self.avg += input_items[0][x]\n            self.pavg += input_items[1][x]\n\
-      \            self.acnt += 1\n            if (self.acnt >= (self.srate * self.lograte)):\n\
-      \                self.avg /= self.acnt\n                self.pavg /= self.acnt\n\
-      \                self.acnt = 0\n                ltp = time.gmtime()\n      \
-      \          d = \"%04d%02d%02d\" % (ltp.tm_year, ltp.tm_mon, ltp.tm_mday)\n \
-      \               fn = self.prefix + d + \".csv\"\n                fp = open(fn,\
-      \ \"a\")\n                db = np.log10(self.pavg+1.0e-14)*10.0\n          \
-      \      if (self.snrcnt != 0):\n                    snra = self.snravg / self.snrcnt\n\
-      \                    self.snrcnt = 0\n                    self.snravg = 0.0\n\
-      \                else:\n                    snra = self.snr\n              \
-      \  snra = np.log10(snra+1.0e-14)*10.0\n                fp.write (\"%02d,%02d,%02d,%f,%f,%f\\\
-      n\" % (ltp.tm_hour, ltp.tm_min, ltp.tm_sec, self.avg,db,snra))\n           \
-      \     self.avg = 0\n                fp.close()\n            \n        \n   \
-      \     return len(input_items[0])\n"
+      \        self.cursnr = 1.0\n        self.snrcnt = 0\n        self.tp = 0.0\n\
+      \n    def work(self, input_items, output_items):\n        \"\"\"Log frequency\
+      \ offsets\"\"\"\n        if (self.cursnr != self.snr):\n            self.cursnr\
+      \ = self.snr\n            self.snravg += self.snr\n            self.snrcnt +=\
+      \ 1\n        for x in range(len(input_items[0])):\n            self.avg += input_items[0][x]\n\
+      \            self.pavg += input_items[1][x]\n            self.acnt += 1\n  \
+      \          if (self.acnt >= (self.srate * self.lograte)):\n                self.avg\
+      \ /= self.acnt\n                self.pavg /= self.acnt\n                self.acnt\
+      \ = 0\n                ltp = time.gmtime()\n                d = \"%04d%02d%02d\"\
+      \ % (ltp.tm_year, ltp.tm_mon, ltp.tm_mday)\n                fn = self.prefix\
+      \ + d + \".csv\"\n                fp = open(fn, \"a\")\n                db =\
+      \ np.log10(self.pavg+1.0e-14)*10.0\n                if (self.snrcnt != 0):\n\
+      \                    snra = self.snravg / self.snrcnt\n                    self.snrcnt\
+      \ = 0\n                    self.snravg = 0.0\n                else:\n      \
+      \              snra = self.snr\n                snra = np.log10(snra+1.0e-14)*10.0\n\
+      \                fp.write (\"%02d,%02d,%02d,%f,%f,%f,%f\\n\" % (ltp.tm_hour,\
+      \ ltp.tm_min, ltp.tm_sec, self.avg,db,snra,tp))\n                self.avg =\
+      \ 0\n                fp.close()\n            \n        \n        return len(input_items[0])\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -1582,10 +1674,11 @@ blocks:
     prefix: prefix+"%-.2fMHz-" % (farray[0]/1.0e6)
     snr: snr_out1
     srate: mid_rate
+    tp: tp_out1
   states:
     _io_cache: ('WWV Doppler Logger', 'blk', [('prefix', "'./'"), ('lograte', '10.0'),
-      ('srate', '1000'), ('snr', '1.0')], [('0', 'float', 1), ('1', 'float', 1)],
-      [], 'Doppler Logger', ['lograte', 'prefix', 'snr', 'srate'])
+      ('srate', '1000'), ('snr', '1.0'), ('tp', '0.0')], [('0', 'float', 1), ('1',
+      'float', 1)], [], 'Doppler Logger', ['lograte', 'prefix', 'snr', 'srate', 'tp'])
     bus_sink: false
     bus_source: false
     bus_structure: null
@@ -1602,8 +1695,8 @@ blocks:
       from gnuradio import gr\nimport time\n\n\nclass blk(gr.sync_block):  # other\
       \ base classes are basic_block, decim_block, interp_block\n    \"\"\"Doppler\
       \ Logger\"\"\"\n\n    def __init__(self, prefix=\"./\", lograte=10.0, srate=1000,\
-      \ snr=1.0):  # only default arguments here\n        \"\"\"arguments to this\
-      \ function show up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n\
+      \ snr=1.0,tp=0.0):  # only default arguments here\n        \"\"\"arguments to\
+      \ this function show up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n\
       \            self,\n            name='WWV Doppler Logger',   # will show up\
       \ in GRC\n            in_sig=[np.float32]*2,\n            out_sig=None\n   \
       \     )\n        # if an attribute with the same name as a parameter is found,\n\
@@ -1611,24 +1704,24 @@ blocks:
       \ = prefix\n        self.lograte = lograte\n        self.avg = 0.0\n       \
       \ self.pavg = 0.0\n        self.acnt = 0\n        self.now = time.time()\n \
       \       self.srate = srate\n        self.snr = 1.0\n        self.snravg = 1.0\n\
-      \        self.cursnr = 1.0\n        self.snrcnt = 0\n\n    def work(self, input_items,\
-      \ output_items):\n        \"\"\"Log frequency offsets\"\"\"\n        if (self.cursnr\
-      \ != self.snr):\n            self.cursnr = self.snr\n            self.snravg\
-      \ += self.snr\n            self.snrcnt += 1\n        for x in range(len(input_items[0])):\n\
-      \            self.avg += input_items[0][x]\n            self.pavg += input_items[1][x]\n\
-      \            self.acnt += 1\n            if (self.acnt >= (self.srate * self.lograte)):\n\
-      \                self.avg /= self.acnt\n                self.pavg /= self.acnt\n\
-      \                self.acnt = 0\n                ltp = time.gmtime()\n      \
-      \          d = \"%04d%02d%02d\" % (ltp.tm_year, ltp.tm_mon, ltp.tm_mday)\n \
-      \               fn = self.prefix + d + \".csv\"\n                fp = open(fn,\
-      \ \"a\")\n                db = np.log10(self.pavg+1.0e-14)*10.0\n          \
-      \      if (self.snrcnt != 0):\n                    snra = self.snravg / self.snrcnt\n\
-      \                    self.snrcnt = 0\n                    self.snravg = 0.0\n\
-      \                else:\n                    snra = self.snr\n              \
-      \  snra = np.log10(snra+1.0e-14)*10.0\n                fp.write (\"%02d,%02d,%02d,%f,%f,%f\\\
-      n\" % (ltp.tm_hour, ltp.tm_min, ltp.tm_sec, self.avg,db,snra))\n           \
-      \     self.avg = 0\n                fp.close()\n            \n        \n   \
-      \     return len(input_items[0])\n"
+      \        self.cursnr = 1.0\n        self.snrcnt = 0\n        self.tp = 0.0\n\
+      \n    def work(self, input_items, output_items):\n        \"\"\"Log frequency\
+      \ offsets\"\"\"\n        if (self.cursnr != self.snr):\n            self.cursnr\
+      \ = self.snr\n            self.snravg += self.snr\n            self.snrcnt +=\
+      \ 1\n        for x in range(len(input_items[0])):\n            self.avg += input_items[0][x]\n\
+      \            self.pavg += input_items[1][x]\n            self.acnt += 1\n  \
+      \          if (self.acnt >= (self.srate * self.lograte)):\n                self.avg\
+      \ /= self.acnt\n                self.pavg /= self.acnt\n                self.acnt\
+      \ = 0\n                ltp = time.gmtime()\n                d = \"%04d%02d%02d\"\
+      \ % (ltp.tm_year, ltp.tm_mon, ltp.tm_mday)\n                fn = self.prefix\
+      \ + d + \".csv\"\n                fp = open(fn, \"a\")\n                db =\
+      \ np.log10(self.pavg+1.0e-14)*10.0\n                if (self.snrcnt != 0):\n\
+      \                    snra = self.snravg / self.snrcnt\n                    self.snrcnt\
+      \ = 0\n                    self.snravg = 0.0\n                else:\n      \
+      \              snra = self.snr\n                snra = np.log10(snra+1.0e-14)*10.0\n\
+      \                fp.write (\"%02d,%02d,%02d,%f,%f,%f,%f\\n\" % (ltp.tm_hour,\
+      \ ltp.tm_min, ltp.tm_sec, self.avg,db,snra,tp))\n                self.avg =\
+      \ 0\n                fp.close()\n            \n        \n        return len(input_items[0])\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -1638,14 +1731,15 @@ blocks:
     prefix: prefix+"%-.2fMHz-" % (farray[1]/1.0e6)
     snr: snr_out2
     srate: mid_rate
+    tp: tp_out2
   states:
     _io_cache: ('WWV Doppler Logger', 'blk', [('prefix', "'./'"), ('lograte', '10.0'),
-      ('srate', '1000'), ('snr', '1.0')], [('0', 'float', 1), ('1', 'float', 1)],
-      [], 'Doppler Logger', ['lograte', 'prefix', 'snr', 'srate'])
+      ('srate', '1000'), ('snr', '1.0'), ('tp', '0.0')], [('0', 'float', 1), ('1',
+      'float', 1)], [], 'Doppler Logger', ['lograte', 'prefix', 'snr', 'srate', 'tp'])
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1448, 988.0]
+    coordinate: [1440, 980.0]
     rotation: 0
     state: true
 - name: xmlrpc_server_0
@@ -1710,7 +1804,9 @@ connections:
 - [single_pole_iir_filter_xx_1, '0', snr_estimator_1, '0']
 - [single_pole_iir_filter_xx_1_0, '0', snr_estimator_1_0, '0']
 - [snr_estimator_1, '0', snr_probe1, '0']
+- [snr_estimator_1, '1', tp_probe1, '0']
 - [snr_estimator_1_0, '0', snr_probe2, '0']
+- [snr_estimator_1_0, '1', tp_probe2, '0']
 - [virtual_source_0, '0', analog_agc_xx_0, '0']
 - [virtual_source_0, '0', blocks_complex_to_mag_squared_0, '0']
 - [virtual_source_0_0, '0', analog_agc_xx_0_0, '0']
