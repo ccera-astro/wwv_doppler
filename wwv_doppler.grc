@@ -1386,12 +1386,13 @@ blocks:
       \    \n            #\n            # 440Hz tone\n            #\n            s440\
       \ = tone_pwr(400.0,v,self.srate)\n            s440 += tone_pwr(-400.0,v,self.srate)\n\
       \            s440 /= 2.0\n            \n            #\n            # Pick loudest\
-      \ tone\n            #\n            stone = max([s500,s600,s440])\n         \
-      \   \n\n            #\n            # SNR estimate\n            #\n         \
-      \   snr = signal/na\n            \n            \n            if (stone/na >\
-      \ 5.0):\n                tp = 1.0\n            else:\n                tp = 0.0\n\
-      \n            output_items[0][x] = snr\n            output_itmes[1][x] = tp\n\
-      \        return len(output_items[0])\n"
+      \ tone from 440,500,600\n            #\n            stone = max([s500,s600,s440])\n\
+      \            \n\n            #\n            # SNR estimate\n            #\n\
+      \            snr = signal/na\n            \n            #\n            # Tones-present\
+      \ flag\n            #\n            if (stone/na > 5.0 and hh/na > 5.0):\n  \
+      \              tp = 1.0\n            else:\n                tp = 0.0\n\n   \
+      \         output_items[0][x] = snr\n            output_itmes[1][x] = tp\n  \
+      \      return len(output_items[0])\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -1454,12 +1455,13 @@ blocks:
       \    \n            #\n            # 440Hz tone\n            #\n            s440\
       \ = tone_pwr(400.0,v,self.srate)\n            s440 += tone_pwr(-400.0,v,self.srate)\n\
       \            s440 /= 2.0\n            \n            #\n            # Pick loudest\
-      \ tone\n            #\n            stone = max([s500,s600,s440])\n         \
-      \   \n\n            #\n            # SNR estimate\n            #\n         \
-      \   snr = signal/na\n            \n            \n            if (stone/na >\
-      \ 5.0):\n                tp = 1.0\n            else:\n                tp = 0.0\n\
-      \n            output_items[0][x] = snr\n            output_itmes[1][x] = tp\n\
-      \        return len(output_items[0])\n"
+      \ tone from 440,500,600\n            #\n            stone = max([s500,s600,s440])\n\
+      \            \n\n            #\n            # SNR estimate\n            #\n\
+      \            snr = signal/na\n            \n            #\n            # Tones-present\
+      \ flag\n            #\n            if (stone/na > 5.0 and hh/na > 5.0):\n  \
+      \              tp = 1.0\n            else:\n                tp = 0.0\n\n   \
+      \         output_items[0][x] = snr\n            output_itmes[1][x] = tp\n  \
+      \      return len(output_items[0])\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -1474,7 +1476,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1256, 1396.0]
+    coordinate: [1272, 1460.0]
     rotation: 0
     state: true
 - name: snr_probe1
