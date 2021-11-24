@@ -1372,19 +1372,19 @@ blocks:
       \ tone\n        #\n        shhz = int(600.0/binsize)\n        \n        for\
       \ x in range(len(output_items[0])):\n            v = input_items[0][x]\n   \
       \         mid = int(self.fftsize/2)\n            #\n            # Centre frequency\n\
-      \            #\n            signal = tone_pwr(0.0,v,self.srate)\n          \
-      \  \n            #\n            # Noise components\n            #\n        \
-      \    n1 = tone_pwr(15.0,v,self.srate)\n            n2  = tone_pwr(-15.0,v,selfsrate)\n\
+      \            #\n            signal = self.tone_pwr(0.0,v,self.srate)\n     \
+      \       \n            #\n            # Noise components\n            #\n   \
+      \         n1 = self.tone_pwr(15.0,v,self.srate)\n            n2  = self.tone_pwr(-15.0,v,selfsrate)\n\
       \            na = (n1+n2)/2.0\n            \n            #\n            # 100Hz\
-      \ sub-carrer\n            #\n            hh = tone_pwr(100.0,v,self.srate)\n\
-      \            hh += tone_pwr(-100.0,v,self.srate)\n            hh /= 2.0\n  \
-      \          \n            #\n            # 500Hz tone\n            #\n      \
-      \      s500 = tone_pwr(500.0,v,self.srate)\n            s500 += tone_pwr(-500.0,v,self.srate)\n\
+      \ sub-carrer\n            #\n            hh = self.tone_pwr(100.0,v,self.srate)\n\
+      \            hh += self.tone_pwr(-100.0,v,self.srate)\n            hh /= 2.0\n\
+      \            \n            #\n            # 500Hz tone\n            #\n    \
+      \        s500 = self.tone_pwr(500.0,v,self.srate)\n            s500 += self.tone_pwr(-500.0,v,self.srate)\n\
       \            s500 /= 2.0\n            \n            #\n            # 600Hz tone\n\
-      \            #\n            s600 = tone_pwr(600.0,v,self.srate)\n          \
-      \  s600 += tone_pwr(-600.0,v,self.srate)\n            s600 /= 2.0\n        \
-      \    \n            #\n            # 440Hz tone\n            #\n            s440\
-      \ = tone_pwr(400.0,v,self.srate)\n            s440 += tone_pwr(-400.0,v,self.srate)\n\
+      \            #\n            s600 = self.tone_pwr(600.0,v,self.srate)\n     \
+      \       s600 += self.tone_pwr(-600.0,v,self.srate)\n            s600 /= 2.0\n\
+      \            \n            #\n            # 440Hz tone\n            #\n    \
+      \        s440 = self.tone_pwr(400.0,v,self.srate)\n            s440 += self.tone_pwr(-400.0,v,self.srate)\n\
       \            s440 /= 2.0\n            \n            #\n            # Pick loudest\
       \ tone from 440,500,600\n            #\n            stone = max([s500,s600,s440])\n\
       \            \n\n            #\n            # SNR estimate\n            #\n\
@@ -1441,19 +1441,19 @@ blocks:
       \ tone\n        #\n        shhz = int(600.0/binsize)\n        \n        for\
       \ x in range(len(output_items[0])):\n            v = input_items[0][x]\n   \
       \         mid = int(self.fftsize/2)\n            #\n            # Centre frequency\n\
-      \            #\n            signal = tone_pwr(0.0,v,self.srate)\n          \
-      \  \n            #\n            # Noise components\n            #\n        \
-      \    n1 = tone_pwr(15.0,v,self.srate)\n            n2  = tone_pwr(-15.0,v,selfsrate)\n\
+      \            #\n            signal = self.tone_pwr(0.0,v,self.srate)\n     \
+      \       \n            #\n            # Noise components\n            #\n   \
+      \         n1 = self.tone_pwr(15.0,v,self.srate)\n            n2  = self.tone_pwr(-15.0,v,selfsrate)\n\
       \            na = (n1+n2)/2.0\n            \n            #\n            # 100Hz\
-      \ sub-carrer\n            #\n            hh = tone_pwr(100.0,v,self.srate)\n\
-      \            hh += tone_pwr(-100.0,v,self.srate)\n            hh /= 2.0\n  \
-      \          \n            #\n            # 500Hz tone\n            #\n      \
-      \      s500 = tone_pwr(500.0,v,self.srate)\n            s500 += tone_pwr(-500.0,v,self.srate)\n\
+      \ sub-carrer\n            #\n            hh = self.tone_pwr(100.0,v,self.srate)\n\
+      \            hh += self.tone_pwr(-100.0,v,self.srate)\n            hh /= 2.0\n\
+      \            \n            #\n            # 500Hz tone\n            #\n    \
+      \        s500 = self.tone_pwr(500.0,v,self.srate)\n            s500 += self.tone_pwr(-500.0,v,self.srate)\n\
       \            s500 /= 2.0\n            \n            #\n            # 600Hz tone\n\
-      \            #\n            s600 = tone_pwr(600.0,v,self.srate)\n          \
-      \  s600 += tone_pwr(-600.0,v,self.srate)\n            s600 /= 2.0\n        \
-      \    \n            #\n            # 440Hz tone\n            #\n            s440\
-      \ = tone_pwr(400.0,v,self.srate)\n            s440 += tone_pwr(-400.0,v,self.srate)\n\
+      \            #\n            s600 = self.tone_pwr(600.0,v,self.srate)\n     \
+      \       s600 += self.tone_pwr(-600.0,v,self.srate)\n            s600 /= 2.0\n\
+      \            \n            #\n            # 440Hz tone\n            #\n    \
+      \        s440 = self.tone_pwr(400.0,v,self.srate)\n            s440 += self.tone_pwr(-400.0,v,self.srate)\n\
       \            s440 /= 2.0\n            \n            #\n            # Pick loudest\
       \ tone from 440,500,600\n            #\n            stone = max([s500,s600,s440])\n\
       \            \n\n            #\n            # SNR estimate\n            #\n\
@@ -1476,7 +1476,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1272, 1460.0]
+    coordinate: [1264, 1460.0]
     rotation: 0
     state: true
 - name: snr_probe1
