@@ -504,6 +504,78 @@ blocks:
     coordinate: [984, 1508.0]
     rotation: 0
     state: true
+- name: blocks_keep_one_in_n_0
+  id: blocks_keep_one_in_n
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    n: '5'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1184, 756.0]
+    rotation: 0
+    state: true
+- name: blocks_keep_one_in_n_0_0
+  id: blocks_keep_one_in_n
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    n: '5'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1192, 860.0]
+    rotation: 0
+    state: true
+- name: blocks_keep_one_in_n_0_1
+  id: blocks_keep_one_in_n
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    n: '5'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1232, 964.0]
+    rotation: 0
+    state: true
+- name: blocks_keep_one_in_n_0_1_0
+  id: blocks_keep_one_in_n
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    n: '5'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1264, 1060.0]
+    rotation: 0
+    state: true
 - name: blocks_stream_to_vector_0
   id: blocks_stream_to_vector
   parameters:
@@ -1702,7 +1774,7 @@ blocks:
     minoutbuf: '0'
     prefix: prefix+"%-.2fMHz-" % (farray[0]/1.0e6)
     snr: snr_out1
-    srate: mid_rate
+    srate: mid_rate/5
     tp: tp_out1
   states:
     _io_cache: ('WWV Doppler Logger', 'blk', [('prefix', "'./'"), ('lograte', '10.0'),
@@ -1711,7 +1783,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1440, 788.0]
+    coordinate: [1488, 788.0]
     rotation: 0
     state: true
 - name: wwv_doplog_1_0
@@ -1759,7 +1831,7 @@ blocks:
     minoutbuf: '0'
     prefix: prefix+"%-.2fMHz-" % (farray[1]/1.0e6)
     snr: snr_out2
-    srate: mid_rate
+    srate: mid_rate/5
     tp: tp_out2
   states:
     _io_cache: ('WWV Doppler Logger', 'blk', [('prefix', "'./'"), ('lograte', '10.0'),
@@ -1768,7 +1840,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1424, 980.0]
+    coordinate: [1496, 980.0]
     rotation: 0
     state: true
 - name: xmlrpc_server_0
@@ -1814,6 +1886,10 @@ connections:
 - [blocks_complex_to_mag_squared_0_0, '0', single_pole_iir_filter_xx_0_1_0, '0']
 - [blocks_complex_to_mag_squared_1, '0', single_pole_iir_filter_xx_1, '0']
 - [blocks_complex_to_mag_squared_1_0, '0', single_pole_iir_filter_xx_1_0, '0']
+- [blocks_keep_one_in_n_0, '0', wwv_doplog_1, '0']
+- [blocks_keep_one_in_n_0_0, '0', wwv_doplog_1, '1']
+- [blocks_keep_one_in_n_0_1, '0', wwv_doplog_1_0, '0']
+- [blocks_keep_one_in_n_0_1_0, '0', wwv_doplog_1_0, '1']
 - [blocks_stream_to_vector_0, '0', fft_vxx_0, '0']
 - [blocks_stream_to_vector_0_0, '0', fft_vxx_0_0, '0']
 - [fft_filter_xxx_0, '0', fft_filter_xxx_0_0, '0']
@@ -1826,10 +1902,10 @@ connections:
 - [freq_xlating_fft_filter_ccc_0_0, '0', fft_filter_xxx_0_1, '0']
 - [osmosdr_source_0, '0', freq_xlating_fft_filter_ccc_0, '0']
 - [osmosdr_source_0, '0', freq_xlating_fft_filter_ccc_0_0, '0']
-- [single_pole_iir_filter_xx_0, '0', wwv_doplog_1, '0']
-- [single_pole_iir_filter_xx_0_0, '0', wwv_doplog_1_0, '0']
-- [single_pole_iir_filter_xx_0_1, '0', wwv_doplog_1, '1']
-- [single_pole_iir_filter_xx_0_1_0, '0', wwv_doplog_1_0, '1']
+- [single_pole_iir_filter_xx_0, '0', blocks_keep_one_in_n_0, '0']
+- [single_pole_iir_filter_xx_0_0, '0', blocks_keep_one_in_n_0_1, '0']
+- [single_pole_iir_filter_xx_0_1, '0', blocks_keep_one_in_n_0_0, '0']
+- [single_pole_iir_filter_xx_0_1_0, '0', blocks_keep_one_in_n_0_1_0, '0']
 - [single_pole_iir_filter_xx_1, '0', snr_estimator_1, '0']
 - [single_pole_iir_filter_xx_1_0, '0', snr_estimator_1_0, '0']
 - [snr_estimator_1, '0', snr_probe1, '0']
