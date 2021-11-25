@@ -109,6 +109,18 @@ blocks:
     coordinate: [856, 36.0]
     rotation: 0
     state: true
+- name: par_decim
+  id: variable
+  parameters:
+    comment: ''
+    value: '10'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1544, 636.0]
+    rotation: 0
+    state: true
 - name: pll_limit
   id: variable
   parameters:
@@ -512,7 +524,7 @@ blocks:
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
-    n: '5'
+    n: par_decim
     type: float
     vlen: '1'
   states:
@@ -530,7 +542,7 @@ blocks:
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
-    n: '5'
+    n: par_decim
     type: float
     vlen: '1'
   states:
@@ -1483,7 +1495,7 @@ blocks:
       \           # Tones-present flag\n            #\n            # If the loudest\
       \ tone is at least 5 times the boise AND\n            #   the 100Hz tone is\
       \ also at least 5 times the noise\n            #\n            #\n          \
-      \  if (stone/na > 5.0 and hh/na > 5.0):\n                self.tpcount = int(pace*15)\n\
+      \  if (stone/na > 3.5 and hh/na > 3.5):\n                self.tpcount = int(pace*15)\n\
       \            else:\n                self.tpcount -= 1\n\n            output_items[0][x]\
       \ = snr\n            output_items[1][x] = 1 if self.tpcount > 0 else 0\n   \
       \     return len(output_items[0])\n"
@@ -1504,7 +1516,7 @@ blocks:
     coordinate: [1488, 1252.0]
     rotation: 0
     state: true
-- name: snr_estimator_1_0
+- name: snr_estimator_2
   id: epy_block
   parameters:
     _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
@@ -1557,7 +1569,7 @@ blocks:
       \           # Tones-present flag\n            #\n            # If the loudest\
       \ tone is at least 5 times the boise AND\n            #   the 100Hz tone is\
       \ also at least 5 times the noise\n            #\n            #\n          \
-      \  if (stone/na > 5.0 and hh/na > 5.0):\n                self.tpcount = int(pace*15)\n\
+      \  if (stone/na > 3.5 and hh/na > 3.5):\n                self.tpcount = int(pace*15)\n\
       \            else:\n                self.tpcount -= 1\n\n            output_items[0][x]\
       \ = snr\n            output_items[1][x] = 1 if self.tpcount > 0 else 0\n   \
       \     return len(output_items[0])\n"
@@ -1575,7 +1587,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1488, 1508.0]
+    coordinate: [1504, 1484.0]
     rotation: 0
     state: true
 - name: snr_probe1
@@ -1774,7 +1786,7 @@ blocks:
     minoutbuf: '0'
     prefix: prefix+"%-.2fMHz-" % (farray[0]/1.0e6)
     snr: snr_out1
-    srate: mid_rate/5
+    srate: mid_rate/par_decim
     tp: tp_out1
   states:
     _io_cache: ('WWV Doppler Logger', 'blk', [('prefix', "'./'"), ('lograte', '10.0'),
@@ -1831,7 +1843,7 @@ blocks:
     minoutbuf: '0'
     prefix: prefix+"%-.2fMHz-" % (farray[1]/1.0e6)
     snr: snr_out2
-    srate: mid_rate/5
+    srate: mid_rate/par_decim
     tp: tp_out2
   states:
     _io_cache: ('WWV Doppler Logger', 'blk', [('prefix', "'./'"), ('lograte', '10.0'),
@@ -1907,11 +1919,11 @@ connections:
 - [single_pole_iir_filter_xx_0_1, '0', blocks_keep_one_in_n_0_0, '0']
 - [single_pole_iir_filter_xx_0_1_0, '0', blocks_keep_one_in_n_0_1_0, '0']
 - [single_pole_iir_filter_xx_1, '0', snr_estimator_1, '0']
-- [single_pole_iir_filter_xx_1_0, '0', snr_estimator_1_0, '0']
+- [single_pole_iir_filter_xx_1_0, '0', snr_estimator_2, '0']
 - [snr_estimator_1, '0', snr_probe1, '0']
 - [snr_estimator_1, '1', tp_probe1, '0']
-- [snr_estimator_1_0, '0', snr_probe2, '0']
-- [snr_estimator_1_0, '1', tp_probe2, '0']
+- [snr_estimator_2, '0', snr_probe2, '0']
+- [snr_estimator_2, '1', tp_probe2, '0']
 - [virtual_source_0, '0', analog_agc_xx_0, '0']
 - [virtual_source_0, '0', blocks_complex_to_mag_squared_0, '0']
 - [virtual_source_0_0, '0', analog_agc_xx_0_0, '0']
