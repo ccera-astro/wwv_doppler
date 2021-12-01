@@ -1748,7 +1748,7 @@ blocks:
       \ GRC will instantiate the first class it finds\nto get ports and parameters\
       \ of your block. The arguments to __init__  will\nbe the parameters. All of\
       \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
-      from gnuradio import gr\nimport time\nimport glob\n\nclass blk(gr.sync_block):\
+      from gnuradio import gr\nimport time\nimport glob\nimport os\n\nclass blk(gr.sync_block):\
       \  # other base classes are basic_block, decim_block, interp_block\n    \"\"\
       \"Doppler Logger\"\"\"\n\n    def __init__(self, prefix=\"./\", lograte=10.0,\
       \ srate=1000, snr=1.0,tp=0.0):  # only default arguments here\n        \"\"\"\
@@ -1783,9 +1783,9 @@ blocks:
       \           if ((time.time() - self.lastpurge) > 60*(12*60)):\n            \
       \        fl = glob.glob(self.prefix+\"*.csv\")\n                    self.lastpurge\
       \ = time.time()\n                    for f in fl:\n                        sts\
-      \ = os.stat(f)\n                        if ((time.time() - sts.mtime) > 5 *\
-      \ self.DAY):\n                            os.remove(f)\n  \n            \n \
-      \       \n        return len(input_items[0])\n\n"
+      \ = os.stat(f)\n                        if ((time.time() - sts.st_mtime) > 5\
+      \ * self.DAY):\n                            os.remove(f)\n  \n            \n\
+      \        \n        return len(input_items[0])\n\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -1813,7 +1813,7 @@ blocks:
       \ GRC will instantiate the first class it finds\nto get ports and parameters\
       \ of your block. The arguments to __init__  will\nbe the parameters. All of\
       \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
-      from gnuradio import gr\nimport time\nimport glob\n\nclass blk(gr.sync_block):\
+      from gnuradio import gr\nimport time\nimport glob\nimport os\n\nclass blk(gr.sync_block):\
       \  # other base classes are basic_block, decim_block, interp_block\n    \"\"\
       \"Doppler Logger\"\"\"\n\n    def __init__(self, prefix=\"./\", lograte=10.0,\
       \ srate=1000, snr=1.0,tp=0.0):  # only default arguments here\n        \"\"\"\
@@ -1848,9 +1848,9 @@ blocks:
       \           if ((time.time() - self.lastpurge) > 60*(12*60)):\n            \
       \        fl = glob.glob(self.prefix+\"*.csv\")\n                    self.lastpurge\
       \ = time.time()\n                    for f in fl:\n                        sts\
-      \ = os.stat(f)\n                        if ((time.time() - sts.mtime) > 5 *\
-      \ self.DAY):\n                            os.remove(f)\n  \n            \n \
-      \       \n        return len(input_items[0])\n\n"
+      \ = os.stat(f)\n                        if ((time.time() - sts.st_mtime) > 5\
+      \ * self.DAY):\n                            os.remove(f)\n  \n            \n\
+      \        \n        return len(input_items[0])\n\n"
     affinity: ''
     alias: ''
     comment: ''
