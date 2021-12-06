@@ -1317,6 +1317,23 @@ blocks:
     coordinate: [320, 612.0]
     rotation: 0
     state: true
+- name: purge
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Purge time (days)
+    short_id: ''
+    type: eng_float
+    value: '5.0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1184, 484.0]
+    rotation: 0
+    state: true
 - name: rfgain
   id: parameter
   parameters:
@@ -1751,41 +1768,41 @@ blocks:
       from gnuradio import gr\nimport time\nimport glob\nimport os\n\nclass blk(gr.sync_block):\
       \  # other base classes are basic_block, decim_block, interp_block\n    \"\"\
       \"Doppler Logger\"\"\"\n\n    def __init__(self, prefix=\"./\", lograte=10.0,\
-      \ srate=1000, snr=1.0,tp=0.0):  # only default arguments here\n        \"\"\"\
-      arguments to this function show up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n\
-      \            self,\n            name='WWV Doppler Logger',   # will show up\
-      \ in GRC\n            in_sig=[np.float32]*2,\n            out_sig=None\n   \
-      \     )\n        # if an attribute with the same name as a parameter is found,\n\
-      \        # a callback is registered (properties work, too).\n        self.prefix\
-      \ = prefix\n        self.lograte = lograte\n        self.avg = 0.0\n       \
-      \ self.pavg = 0.0\n        self.acnt = 0\n        self.now = time.time()\n \
-      \       self.srate = srate\n        self.snr = 1.0\n        self.snravg = 1.0\n\
-      \        self.cursnr = 1.0\n        self.snrcnt = 0\n        self.tp = 0.0\n\
-      \        self.lastpurge = self.now\n        self.DAY = 86400\n\n    def work(self,\
-      \ input_items, output_items):\n        \"\"\"Log frequency offsets\"\"\"\n \
-      \       if (self.cursnr != self.snr):\n            self.cursnr = self.snr\n\
-      \            self.snravg += self.snr\n            self.snrcnt += 1\n       \
-      \ for x in range(len(input_items[0])):\n            self.avg += input_items[0][x]\n\
-      \            self.pavg += input_items[1][x]\n            self.acnt += 1\n  \
-      \          if (self.acnt >= (self.srate * self.lograte)):\n                self.avg\
-      \ /= self.acnt\n                self.pavg /= self.acnt\n                self.acnt\
-      \ = 0\n                ltp = time.gmtime()\n                d = \"%04d%02d%02d\"\
-      \ % (ltp.tm_year, ltp.tm_mon, ltp.tm_mday)\n                fn = self.prefix\
-      \ + d + \".csv\"\n                fp = open(fn, \"a\")\n                db =\
-      \ np.log10(self.pavg+1.0e-14)*10.0\n                if (self.snrcnt != 0):\n\
-      \                    snra = self.snravg / self.snrcnt\n                    self.snrcnt\
-      \ = 0\n                    self.snravg = 0.0\n                else:\n      \
-      \              snra = self.snr\n                snra = np.log10(snra+1.0e-14)*10.0\n\
-      \                fp.write (\"%02d,%02d,%02d,%f,%f,%f,%f\\n\" % (ltp.tm_hour,\
-      \ ltp.tm_min, ltp.tm_sec, self.avg,db,snra,self.tp))\n                fp.close()\n\
-      \                self.avg = 0\n                self.pavg = 0\n\n           \
-      \     #\n                # Time to purge old data\n                #\n     \
-      \           if ((time.time() - self.lastpurge) > 60*(12*60)):\n            \
-      \        fl = glob.glob(self.prefix+\"*.csv\")\n                    self.lastpurge\
-      \ = time.time()\n                    for f in fl:\n                        sts\
-      \ = os.stat(f)\n                        if ((time.time() - sts.st_mtime) > 5\
-      \ * self.DAY):\n                            os.remove(f)\n  \n            \n\
-      \        \n        return len(input_items[0])\n\n"
+      \ srate=1000, snr=1.0,tp=0.0,purge=5.0):  # only default arguments here\n  \
+      \      \"\"\"arguments to this function show up as parameters in GRC\"\"\"\n\
+      \        gr.sync_block.__init__(\n            self,\n            name='WWV Doppler\
+      \ Logger',   # will show up in GRC\n            in_sig=[np.float32]*2,\n   \
+      \         out_sig=None\n        )\n        # if an attribute with the same name\
+      \ as a parameter is found,\n        # a callback is registered (properties work,\
+      \ too).\n        self.prefix = prefix\n        self.lograte = lograte\n    \
+      \    self.avg = 0.0\n        self.pavg = 0.0\n        self.acnt = 0\n      \
+      \  self.now = time.time()\n        self.srate = srate\n        self.snr = 1.0\n\
+      \        self.snravg = 1.0\n        self.cursnr = 1.0\n        self.snrcnt =\
+      \ 0\n        self.tp = 0.0\n        self.lastpurge = self.now\n        self.DAY\
+      \ = 86400\n        self.purge = purge\n\n    def work(self, input_items, output_items):\n\
+      \        \"\"\"Log frequency offsets\"\"\"\n        if (self.cursnr != self.snr):\n\
+      \            self.cursnr = self.snr\n            self.snravg += self.snr\n \
+      \           self.snrcnt += 1\n        for x in range(len(input_items[0])):\n\
+      \            self.avg += input_items[0][x]\n            self.pavg += input_items[1][x]\n\
+      \            self.acnt += 1\n            if (self.acnt >= (self.srate * self.lograte)):\n\
+      \                self.avg /= self.acnt\n                self.pavg /= self.acnt\n\
+      \                self.acnt = 0\n                ltp = time.gmtime()\n      \
+      \          d = \"%04d%02d%02d\" % (ltp.tm_year, ltp.tm_mon, ltp.tm_mday)\n \
+      \               fn = self.prefix + d + \".csv\"\n                fp = open(fn,\
+      \ \"a\")\n                db = np.log10(self.pavg+1.0e-14)*10.0\n          \
+      \      if (self.snrcnt != 0):\n                    snra = self.snravg / self.snrcnt\n\
+      \                    self.snrcnt = 0\n                    self.snravg = 0.0\n\
+      \                else:\n                    snra = self.snr\n              \
+      \  snra = np.log10(snra+1.0e-14)*10.0\n                fp.write (\"%02d,%02d,%02d,%f,%f,%f,%f\\\
+      n\" % (ltp.tm_hour, ltp.tm_min, ltp.tm_sec, self.avg,db,snra,self.tp))\n   \
+      \             fp.close()\n                self.avg = 0\n                self.pavg\
+      \ = 0\n\n                #\n                # Time to purge old data\n     \
+      \           #\n                if ((time.time() - self.lastpurge) > (self.DAY/24)):\n\
+      \                    fl = glob.glob(self.prefix+\"*.csv\")\n               \
+      \     self.lastpurge = time.time()\n                    for f in fl:\n     \
+      \                   sts = os.stat(f)\n                        if ((time.time()\
+      \ - sts.st_mtime) > (self.purge * self.DAY)):\n                            os.remove(f)\n\
+      \  \n            \n        \n        return len(input_items[0])\n\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -1793,20 +1810,22 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     prefix: prefix+"%-.2fMHz-" % (farray[0]/1.0e6)
+    purge: purge
     snr: snr_out1
     srate: mid_rate/par_decim
     tp: tp_out1
   states:
     _io_cache: ('WWV Doppler Logger', 'blk', [('prefix', "'./'"), ('lograte', '10.0'),
-      ('srate', '1000'), ('snr', '1.0'), ('tp', '0.0')], [('0', 'float', 1), ('1',
-      'float', 1)], [], 'Doppler Logger', ['lograte', 'prefix', 'snr', 'srate', 'tp'])
+      ('srate', '1000'), ('snr', '1.0'), ('tp', '0.0'), ('purge', '5.0')], [('0',
+      'float', 1), ('1', 'float', 1)], [], 'Doppler Logger', ['lograte', 'prefix',
+      'purge', 'snr', 'srate', 'tp'])
     bus_sink: false
     bus_source: false
     bus_structure: null
     coordinate: [1488, 788.0]
     rotation: 0
     state: true
-- name: wwv_doplog_1_0
+- name: wwv_doplog_2
   id: epy_block
   parameters:
     _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
@@ -1816,41 +1835,41 @@ blocks:
       from gnuradio import gr\nimport time\nimport glob\nimport os\n\nclass blk(gr.sync_block):\
       \  # other base classes are basic_block, decim_block, interp_block\n    \"\"\
       \"Doppler Logger\"\"\"\n\n    def __init__(self, prefix=\"./\", lograte=10.0,\
-      \ srate=1000, snr=1.0,tp=0.0):  # only default arguments here\n        \"\"\"\
-      arguments to this function show up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n\
-      \            self,\n            name='WWV Doppler Logger',   # will show up\
-      \ in GRC\n            in_sig=[np.float32]*2,\n            out_sig=None\n   \
-      \     )\n        # if an attribute with the same name as a parameter is found,\n\
-      \        # a callback is registered (properties work, too).\n        self.prefix\
-      \ = prefix\n        self.lograte = lograte\n        self.avg = 0.0\n       \
-      \ self.pavg = 0.0\n        self.acnt = 0\n        self.now = time.time()\n \
-      \       self.srate = srate\n        self.snr = 1.0\n        self.snravg = 1.0\n\
-      \        self.cursnr = 1.0\n        self.snrcnt = 0\n        self.tp = 0.0\n\
-      \        self.lastpurge = self.now\n        self.DAY = 86400\n\n    def work(self,\
-      \ input_items, output_items):\n        \"\"\"Log frequency offsets\"\"\"\n \
-      \       if (self.cursnr != self.snr):\n            self.cursnr = self.snr\n\
-      \            self.snravg += self.snr\n            self.snrcnt += 1\n       \
-      \ for x in range(len(input_items[0])):\n            self.avg += input_items[0][x]\n\
-      \            self.pavg += input_items[1][x]\n            self.acnt += 1\n  \
-      \          if (self.acnt >= (self.srate * self.lograte)):\n                self.avg\
-      \ /= self.acnt\n                self.pavg /= self.acnt\n                self.acnt\
-      \ = 0\n                ltp = time.gmtime()\n                d = \"%04d%02d%02d\"\
-      \ % (ltp.tm_year, ltp.tm_mon, ltp.tm_mday)\n                fn = self.prefix\
-      \ + d + \".csv\"\n                fp = open(fn, \"a\")\n                db =\
-      \ np.log10(self.pavg+1.0e-14)*10.0\n                if (self.snrcnt != 0):\n\
-      \                    snra = self.snravg / self.snrcnt\n                    self.snrcnt\
-      \ = 0\n                    self.snravg = 0.0\n                else:\n      \
-      \              snra = self.snr\n                snra = np.log10(snra+1.0e-14)*10.0\n\
-      \                fp.write (\"%02d,%02d,%02d,%f,%f,%f,%f\\n\" % (ltp.tm_hour,\
-      \ ltp.tm_min, ltp.tm_sec, self.avg,db,snra,self.tp))\n                fp.close()\n\
-      \                self.avg = 0\n                self.pavg = 0\n\n           \
-      \     #\n                # Time to purge old data\n                #\n     \
-      \           if ((time.time() - self.lastpurge) > 60*(12*60)):\n            \
-      \        fl = glob.glob(self.prefix+\"*.csv\")\n                    self.lastpurge\
-      \ = time.time()\n                    for f in fl:\n                        sts\
-      \ = os.stat(f)\n                        if ((time.time() - sts.st_mtime) > 5\
-      \ * self.DAY):\n                            os.remove(f)\n  \n            \n\
-      \        \n        return len(input_items[0])\n\n"
+      \ srate=1000, snr=1.0,tp=0.0,purge=5.0):  # only default arguments here\n  \
+      \      \"\"\"arguments to this function show up as parameters in GRC\"\"\"\n\
+      \        gr.sync_block.__init__(\n            self,\n            name='WWV Doppler\
+      \ Logger',   # will show up in GRC\n            in_sig=[np.float32]*2,\n   \
+      \         out_sig=None\n        )\n        # if an attribute with the same name\
+      \ as a parameter is found,\n        # a callback is registered (properties work,\
+      \ too).\n        self.prefix = prefix\n        self.lograte = lograte\n    \
+      \    self.avg = 0.0\n        self.pavg = 0.0\n        self.acnt = 0\n      \
+      \  self.now = time.time()\n        self.srate = srate\n        self.snr = 1.0\n\
+      \        self.snravg = 1.0\n        self.cursnr = 1.0\n        self.snrcnt =\
+      \ 0\n        self.tp = 0.0\n        self.lastpurge = self.now\n        self.DAY\
+      \ = 86400\n        self.purge = purge\n\n    def work(self, input_items, output_items):\n\
+      \        \"\"\"Log frequency offsets\"\"\"\n        if (self.cursnr != self.snr):\n\
+      \            self.cursnr = self.snr\n            self.snravg += self.snr\n \
+      \           self.snrcnt += 1\n        for x in range(len(input_items[0])):\n\
+      \            self.avg += input_items[0][x]\n            self.pavg += input_items[1][x]\n\
+      \            self.acnt += 1\n            if (self.acnt >= (self.srate * self.lograte)):\n\
+      \                self.avg /= self.acnt\n                self.pavg /= self.acnt\n\
+      \                self.acnt = 0\n                ltp = time.gmtime()\n      \
+      \          d = \"%04d%02d%02d\" % (ltp.tm_year, ltp.tm_mon, ltp.tm_mday)\n \
+      \               fn = self.prefix + d + \".csv\"\n                fp = open(fn,\
+      \ \"a\")\n                db = np.log10(self.pavg+1.0e-14)*10.0\n          \
+      \      if (self.snrcnt != 0):\n                    snra = self.snravg / self.snrcnt\n\
+      \                    self.snrcnt = 0\n                    self.snravg = 0.0\n\
+      \                else:\n                    snra = self.snr\n              \
+      \  snra = np.log10(snra+1.0e-14)*10.0\n                fp.write (\"%02d,%02d,%02d,%f,%f,%f,%f\\\
+      n\" % (ltp.tm_hour, ltp.tm_min, ltp.tm_sec, self.avg,db,snra,self.tp))\n   \
+      \             fp.close()\n                self.avg = 0\n                self.pavg\
+      \ = 0\n\n                #\n                # Time to purge old data\n     \
+      \           #\n                if ((time.time() - self.lastpurge) > (self.DAY/24)):\n\
+      \                    fl = glob.glob(self.prefix+\"*.csv\")\n               \
+      \     self.lastpurge = time.time()\n                    for f in fl:\n     \
+      \                   sts = os.stat(f)\n                        if ((time.time()\
+      \ - sts.st_mtime) > (self.purge * self.DAY)):\n                            os.remove(f)\n\
+      \  \n            \n        \n        return len(input_items[0])\n\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -1858,17 +1877,19 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     prefix: prefix+"%-.2fMHz-" % (farray[1]/1.0e6)
+    purge: purge
     snr: snr_out2
     srate: mid_rate/par_decim
     tp: tp_out2
   states:
     _io_cache: ('WWV Doppler Logger', 'blk', [('prefix', "'./'"), ('lograte', '10.0'),
-      ('srate', '1000'), ('snr', '1.0'), ('tp', '0.0')], [('0', 'float', 1), ('1',
-      'float', 1)], [], 'Doppler Logger', ['lograte', 'prefix', 'snr', 'srate', 'tp'])
+      ('srate', '1000'), ('snr', '1.0'), ('tp', '0.0'), ('purge', '5.0')], [('0',
+      'float', 1), ('1', 'float', 1)], [], 'Doppler Logger', ['lograte', 'prefix',
+      'purge', 'snr', 'srate', 'tp'])
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1480, 964.0]
+    coordinate: [1488, 980.0]
     rotation: 0
     state: true
 - name: xmlrpc_server_0
@@ -1916,8 +1937,8 @@ connections:
 - [blocks_complex_to_mag_squared_1_0, '0', single_pole_iir_filter_xx_1_0, '0']
 - [blocks_keep_one_in_n_0, '0', wwv_doplog_1, '0']
 - [blocks_keep_one_in_n_0_0, '0', wwv_doplog_1, '1']
-- [blocks_keep_one_in_n_0_1, '0', wwv_doplog_1_0, '0']
-- [blocks_keep_one_in_n_0_1_0, '0', wwv_doplog_1_0, '1']
+- [blocks_keep_one_in_n_0_1, '0', wwv_doplog_2, '0']
+- [blocks_keep_one_in_n_0_1_0, '0', wwv_doplog_2, '1']
 - [blocks_stream_to_vector_0, '0', fft_vxx_0, '0']
 - [blocks_stream_to_vector_0_0, '0', fft_vxx_0_0, '0']
 - [fft_filter_xxx_0, '0', fft_filter_xxx_0_0, '0']
