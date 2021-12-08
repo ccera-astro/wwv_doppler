@@ -1512,7 +1512,7 @@ blocks:
       \           # Tones-present flag\n            #\n            # If the loudest\
       \ tone is at least 5 times the boise AND\n            #   the 100Hz tone is\
       \ also at least 5 times the noise\n            #\n            #\n          \
-      \  if (stone/na > 3.5 and hh/na > 3.5):\n                self.tpcount = int(pace*15)\n\
+      \  if (stone/na > 3.5 and hh/na > 3.5):\n                self.tpcount = int(pace*20)\n\
       \            else:\n                self.tpcount -= 1\n\n            output_items[0][x]\
       \ = snr\n            output_items[1][x] = 1 if self.tpcount > 0 else 0\n   \
       \     return len(output_items[0])\n"
@@ -1586,7 +1586,7 @@ blocks:
       \           # Tones-present flag\n            #\n            # If the loudest\
       \ tone is at least 5 times the boise AND\n            #   the 100Hz tone is\
       \ also at least 5 times the noise\n            #\n            #\n          \
-      \  if (stone/na > 3.5 and hh/na > 3.5):\n                self.tpcount = int(pace*15)\n\
+      \  if (stone/na > 3.5 and hh/na > 3.5):\n                self.tpcount = int(pace*20)\n\
       \            else:\n                self.tpcount -= 1\n\n            output_items[0][x]\
       \ = snr\n            output_items[1][x] = 1 if self.tpcount > 0 else 0\n   \
       \     return len(output_items[0])\n"
@@ -1604,7 +1604,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1504, 1484.0]
+    coordinate: [1464, 1500.0]
     rotation: 0
     state: true
 - name: snr_probe1
